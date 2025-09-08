@@ -48,7 +48,7 @@ const mockStellarServer = {
 
 // Configurações globais para testes
 global.testConfig = {
-  supabase,
+  supabase: mockSupabase,
   mockStellarServer,
   testTimeout: 10000
 };
@@ -69,6 +69,6 @@ beforeEach(() => {
 });
 
 module.exports = {
-  supabase,
+  supabase: mockSupabase,
   mockStellarServer
 };

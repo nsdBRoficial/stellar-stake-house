@@ -65,7 +65,7 @@ describe('Middleware de Validação', () => {
       const validAddress = 'GDKIJJIKXLOM2NRMPNQZUUYK24ZPVFC7426A44QE63BVIKVFAAWY52JR';
       const response = await request(app)
         .post('/test')
-        .send({ address: validAddress })
+        .send({ stellar_address: validAddress })
         .expect(200);
 
       expect(response.body.success).toBe(true);
@@ -78,7 +78,7 @@ describe('Middleware de Validação', () => {
 
       const response = await request(app)
         .post('/test')
-        .send({ address: 'invalid-address' })
+        .send({ stellar_address: 'invalid-address' })
         .expect(400);
 
       expect(response.body.errors).toBeDefined();

@@ -27,7 +27,8 @@ export class PasskeyStrategy extends AuthStrategy {
       }
 
       // Verificar se o dispositivo suporta autenticadores
-      const isAuthenticatorSupported = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()
+      const isAuthenticatorSupported = window.PublicKeyCredential ? 
+        await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable() : false
       
       console.log('[PASSKEY] WebAuthn disponível:', isWebAuthnSupported)
       console.log('[PASSKEY] Autenticador de plataforma disponível:', isAuthenticatorSupported)

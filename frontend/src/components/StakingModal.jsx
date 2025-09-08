@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useLanguage } from '../contexts/LanguageContext'
 import { 
   X, 
   Zap, 
@@ -10,6 +11,7 @@ import {
 } from 'lucide-react'
 
 const StakingModal = ({ isOpen, onClose, tokens, onStake }) => {
+  const { t } = useLanguage()
   const [selectedToken, setSelectedToken] = useState('KALE')
   const [amount, setAmount] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -37,17 +39,17 @@ const StakingModal = ({ isOpen, onClose, tokens, onStake }) => {
     const numAmount = parseFloat(amount)
     
     if (!amount || numAmount <= 0) {
-      setError('Digite um valor válido')
+      setError(t('staking.enterValidAmount'))
       return false
     }
     
     if (numAmount > userBalance) {
-      setError('Valor excede o saldo disponível')
+      setError(t('staking.exceedsBalance'))
       return false
     }
     
     if (numAmount < 1) {
-      setError('Valor mínimo para staking é 1 KALE')
+      setError(t('staking.minimumStaking'))
       return false
     }
     
@@ -78,7 +80,7 @@ const StakingModal = ({ isOpen, onClose, tokens, onStake }) => {
       }, 2000)
       
     } catch (err) {
-      setError(err.message || 'Erro ao processar staking')
+      setError(err.message || t('staking.stakingFailed'))
     } finally {
       setIsLoading(false)
     }
@@ -88,6 +90,13 @@ const StakingModal = ({ isOpen, onClose, tokens, onStake }) => {
     return new Intl.NumberFormat('pt-BR', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 4
+    }).format(value)
+  }
+
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
     }).format(value)
   }
 
@@ -102,7 +111,7 @@ const StakingModal = ({ isOpen, onClose, tokens, onStake }) => {
             <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-xl">
               <Zap className="h-6 w-6 text-white" />
             </div>
-            <h2 className="text-xl font-bold text-white">Fazer Staking</h2>
+            <h2 className="text-xl font-bold text-white">{t('staking.makeStaking')}</h2>
           </div>
           <button
             onClick={onClose}
@@ -117,9 +126,9 @@ const StakingModal = ({ isOpen, onClose, tokens, onStake }) => {
           {success ? (
             <div className="text-center py-8">
               <CheckCircle className="h-16 w-16 text-green-400 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-white mb-2">Delegação Realizada!</h3>
+              <h3 className="text-xl font-bold text-white mb-2">{t('staking.delegationCompleted')}</h3>
               <p className="text-gray-400">
-                {formatNumber(parseFloat(amount))} {selectedToken} foram delegados com sucesso
+                {formatNumber(parseFloat(amount))} {selectedToken} {t('staking.delegatedSuccessfully')}
               </p>
             </div>
           ) : (
@@ -129,13 +138,12 @@ const StakingModal = ({ isOpen, onClose, tokens, onStake }) => {
                 <div className="flex items-start space-x-3">
                   <Info className="h-5 w-5 text-blue-400 flex-shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="text-blue-200 font-medium mb-1">Delegação Segura na Rede Stellar</h4>
+                    <h4 className="text-blue-200 font-medium mb-1">{t('staking.secureStakingTitle')}</h4>
                     <p className="text-blue-200 text-sm mb-2">
-                      Você está <strong>delegando</strong> seus tokens através de contratos inteligentes verificados. 
-                      Seus tokens <strong>NUNCA saem da sua carteira</strong> - você mantém controle total dos seus ativos.
+                      {t('staking.secureStakingDesc')}
                     </p>
                     <p className="text-blue-300 text-xs">
-                      ✓ Tokens permanecem na sua carteira • ✓ Pode cancelar a qualquer momento • ✓ Recompensas proporcionais via Reflector Oracle
+                      {t('staking.secureStakingFeatures')}
                     </p>
                   </div>
                 </div>
@@ -144,7 +152,7 @@ const StakingModal = ({ isOpen, onClose, tokens, onStake }) => {
               {/* Seletor de Token */}
               <div className="mb-6">
                 <label className="block text-gray-300 text-sm font-medium mb-2">
-                  Selecionar Token
+                  {t('staking.selectToken')}
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                   {Object.entries(tokens || {}).map(([symbol, tokenData]) => (
@@ -178,7 +186,7 @@ const StakingModal = ({ isOpen, onClose, tokens, onStake }) => {
               {/* Saldo disponível */}
               <div className="mb-6">
                 <div className="flex justify-between items-center mb-2">
-                  <label className="text-gray-300 text-sm font-medium">Saldo Disponível</label>
+                  <label className="text-gray-300 text-sm font-medium">{t('staking.availableBalance')}</label>
                   <span className="text-white font-semibold">{formatNumber(userBalance)} {selectedToken}</span>
                 </div>
               </div>
@@ -186,7 +194,7 @@ const StakingModal = ({ isOpen, onClose, tokens, onStake }) => {
               {/* Input de valor */}
               <div className="mb-6">
                 <label className="block text-gray-300 text-sm font-medium mb-2">
-                  Valor para Staking
+                  {t('staking.stakingAmount')}
                 </label>
                 <div className="relative">
                     <input
@@ -202,7 +210,7 @@ const StakingModal = ({ isOpen, onClose, tokens, onStake }) => {
                         onClick={setMaxAmount}
                         className="px-2 py-1 bg-purple-600 hover:bg-purple-700 text-white text-xs rounded transition-colors"
                       >
-                        MAX
+                        {t('staking.max')}
                       </button>
                     </div>
                   </div>
@@ -217,26 +225,26 @@ const StakingModal = ({ isOpen, onClose, tokens, onStake }) => {
               {/* Informações de recompensa */}
               {amount && parseFloat(amount) > 0 && (
                 <div className="bg-white/5 rounded-xl p-4 mb-6">
-                  <h4 className="text-white font-medium mb-3">Estimativa de Recompensas</h4>
+                  <h4 className="text-white font-medium mb-3">{t('staking.rewardEstimates')}</h4>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-400">APY Atual:</span>
+                      <span className="text-gray-400">{t('staking.currentApy')}:</span>
                       <span className="text-green-400 font-semibold">{formatNumber(currentToken.apy || 0, 1)}%</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Recompensa Diária Estimada:</span>
+                      <span className="text-gray-400">{t('staking.estimatedDailyReward')}:</span>
                       <span className="text-white font-semibold">
                         {formatNumber((parseFloat(amount) * (currentToken.apy || 0) / 100) / 365)} {selectedToken}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Recompensa Mensal Estimada:</span>
+                      <span className="text-gray-400">{t('staking.estimatedMonthlyReward')}:</span>
                       <span className="text-white font-semibold">
                         {formatNumber((parseFloat(amount) * (currentToken.apy || 0) / 100) / 12)} {selectedToken}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Valor Estimado Mensal:</span>
+                      <span className="text-gray-400">{t('staking.estimatedMonthlyValue')}:</span>
                       <span className="text-white font-semibold">
                         {formatCurrency(((parseFloat(amount) * (currentToken.apy || 0) / 100) / 12) * (currentToken.price || 0))}
                       </span>
@@ -254,12 +262,12 @@ const StakingModal = ({ isOpen, onClose, tokens, onStake }) => {
                 {isLoading ? (
                   <>
                     <Loader2 className="h-5 w-5 animate-spin text-white" />
-                    <span className="text-white font-semibold">Processando Delegação...</span>
+                    <span className="text-white font-semibold">{t('staking.processingDelegation')}</span>
                   </>
                 ) : (
                   <>
                     <Zap className="h-5 w-5 text-white" />
-                    <span className="text-white font-semibold">Delegar {amount ? formatNumber(parseFloat(amount)) : '0'} {selectedToken}</span>
+                    <span className="text-white font-semibold">{t('staking.delegate')} {amount ? formatNumber(parseFloat(amount)) : '0'} {selectedToken}</span>
                     <ArrowRight className="h-5 w-5 text-white" />
                   </>
                 )}
@@ -268,8 +276,7 @@ const StakingModal = ({ isOpen, onClose, tokens, onStake }) => {
               {/* Disclaimer */}
               <div className="mt-4 text-center">
                 <p className="text-gray-400 text-xs">
-                  Ao confirmar, você está assinando um contrato de delegação. 
-                  Seus tokens permanecem em sua carteira.
+                  {t('staking.confirmingDisclaimer')}
                 </p>
               </div>
             </>

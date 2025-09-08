@@ -6,7 +6,7 @@ const {
   validateStellarAddress,
   validateStakingDelegation,
   sanitizeInput,
-  securityLogger
+  securityLoggerMiddleware
 } = require('../middleware/validation');
 
 // Configuração do Supabase
@@ -24,7 +24,7 @@ const STAKING_TOKEN_ISSUER = process.env.STAKING_TOKEN_ISSUER;
 const STAKING_POOL_ADDRESS = process.env.STAKING_POOL_ADDRESS;
 
 // Aplicar middlewares de segurança em todas as rotas
-router.use(securityLogger);
+router.use(securityLoggerMiddleware);
 router.use(sanitizeInput);
 
 /**

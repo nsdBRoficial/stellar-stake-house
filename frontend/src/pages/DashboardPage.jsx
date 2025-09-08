@@ -479,11 +479,11 @@ const DashboardPage = () => {
                   <span>{t('dashboard.delegationWhatWeDo')}</span>
                 </h3>
                 <ul className="text-green-100 text-sm space-y-1">
-                  <li>• {t('dashboard.tokensRemainInWallet')}</li>
-                  <li>• {t('dashboard.signDelegationContract')}</li>
-                  <li>• {t('dashboard.cancelAnytime')}</li>
-                  <li>• {t('dashboard.receiveProportionalRewards')}</li>
-                  <li>• {t('dashboard.maintainTotalControl')}</li>
+                  <li>• {t('dashboard.tokensAlwaysRemainInWallet')}</li>
+                <li>• {t('dashboard.signDelegationContract')}</li>
+                <li>• {t('dashboard.cancelAnytime')}</li>
+                <li>• {t('dashboard.receiveProportionalRewards')}</li>
+                <li>• {t('dashboard.maintainControlDuringDelegation')}</li>
                 </ul>
               </div>
               <div className="bg-red-500/10 rounded-xl p-4 border border-red-500/20">
@@ -706,9 +706,9 @@ const DashboardPage = () => {
           >
             <div className="flex items-center justify-center space-x-3">
               <Zap className="h-6 w-6 text-white" />
-              <span className="text-white font-semibold text-lg">Fazer Staking</span>
+              <span className="text-white font-semibold text-lg">{t('dashboard.makeStaking')}</span>
             </div>
-            <p className="text-blue-100 text-sm mt-2">Delegue seus tokens KALE</p>
+            <p className="text-blue-100 text-sm mt-2">{t('dashboard.delegateKaleTokens')}</p>
           </button>
           
           <button 
@@ -717,9 +717,9 @@ const DashboardPage = () => {
           >
             <div className="flex items-center justify-center space-x-3">
               <Gift className="h-6 w-6 text-white" />
-              <span className="text-white font-semibold text-lg">Resgatar Recompensas</span>
+              <span className="text-white font-semibold text-lg">{t('dashboard.claimRewards')}</span>
             </div>
-            <p className="text-green-100 text-sm mt-2">Colete suas recompensas</p>
+            <p className="text-green-100 text-sm mt-2">{t('dashboard.collectRewards')}</p>
             {Object.values(dashboardData.tokens).some(token => token.pendingRewards > 0) && (
               <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center">
                 !
@@ -733,9 +733,9 @@ const DashboardPage = () => {
           >
             <div className="flex items-center justify-center space-x-3">
               <History className="h-6 w-6 text-white" />
-              <span className="text-white font-semibold text-lg">Ver Histórico</span>
+              <span className="text-white font-semibold text-lg">{t('dashboard.viewHistory')}</span>
             </div>
-            <p className="text-orange-100 text-sm mt-2">Acompanhe suas transações</p>
+            <p className="text-orange-100 text-sm mt-2">{t('dashboard.trackTransactions')}</p>
           </button>
         </div>
           </>
@@ -750,10 +750,10 @@ const DashboardPage = () => {
                 <div>
                   <h2 className="text-2xl font-bold text-white mb-2 flex items-center space-x-2">
                     <Building2 className="h-7 w-7 text-purple-400" />
-                    <span>Gerenciar Projetos</span>
+                    <span>{t('dashboard.manageProjects')}</span>
                   </h2>
                   <p className="text-gray-400">
-                    Crie e gerencie pools de recompensas para sua comunidade
+                    {t('dashboard.createManagePools')}
                   </p>
                 </div>
                 
@@ -762,7 +762,7 @@ const DashboardPage = () => {
                   className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 rounded-xl transition-all duration-200 transform hover:scale-105"
                 >
                   <Plus className="h-5 w-5 text-white" />
-                  <span className="text-white font-semibold">Criar Pool</span>
+                  <span className="text-white font-semibold">{t('dashboard.createPool')}</span>
                 </button>
               </div>
             </div>
@@ -772,29 +772,28 @@ const DashboardPage = () => {
               <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-8 border border-purple-500/30 mb-8">
                 <div className="text-center">
                   <Building2 className="h-16 w-16 text-purple-400 mx-auto mb-4" />
-                  <h3 className="text-2xl font-bold text-white mb-4">Torne-se um Dono de Projeto</h3>
+                  <h3 className="text-2xl font-bold text-white mb-4">{t('dashboard.becomeProjectOwner')}</h3>
                   <p className="text-purple-200 mb-6 max-w-2xl mx-auto">
-                    Registre seu projeto na nossa plataforma marketplace e comece a distribuir recompensas 
-                    para usuários que delegam seus tokens. Crie pools personalizadas com APY e prazos flexíveis.
+                    {t('dashboard.registerProject')}
                   </p>
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div className="bg-white/5 rounded-xl p-4">
                       <Target className="h-8 w-8 text-purple-400 mx-auto mb-2" />
-                      <h4 className="text-white font-semibold mb-1">Defina Recompensas</h4>
-                      <p className="text-purple-200 text-sm">Configure quantidade de tokens e APY máximo</p>
+                      <h4 className="text-white font-semibold mb-1">{t('dashboard.defineRewards')}</h4>
+                      <p className="text-purple-200 text-sm">{t('dashboard.defineRewardsDesc')}</p>
                     </div>
                     
                     <div className="bg-white/5 rounded-xl p-4">
                       <Calendar className="h-8 w-8 text-purple-400 mx-auto mb-2" />
-                      <h4 className="text-white font-semibold mb-1">Controle Prazos</h4>
-                      <p className="text-purple-200 text-sm">Estabeleça período de distribuição das recompensas</p>
+                      <h4 className="text-white font-semibold mb-1">{t('dashboard.controlDeadlines')}</h4>
+                      <p className="text-purple-200 text-sm">{t('dashboard.controlDeadlinesDesc')}</p>
                     </div>
                     
                     <div className="bg-white/5 rounded-xl p-4">
                       <Users className="h-8 w-8 text-purple-400 mx-auto mb-2" />
-                      <h4 className="text-white font-semibold mb-1">Atraia Delegadores</h4>
-                      <p className="text-purple-200 text-sm">Usuários delegam tokens e recebem recompensas proporcionais</p>
+                      <h4 className="text-white font-semibold mb-1">{t('dashboard.attractDelegators')}</h4>
+                      <p className="text-purple-200 text-sm">{t('dashboard.attractDelegatorsDesc')}</p>
                     </div>
                   </div>
                   
@@ -854,7 +853,7 @@ const DashboardPage = () => {
                       
                       <div className="bg-white/5 rounded-xl p-3 mb-4">
                         <div className="flex justify-between items-center mb-2">
-                          <span className="text-gray-400 text-sm">Progresso</span>
+                          <span className="text-gray-400 text-sm">{t('dashboard.progress')}</span>
                           <span className="text-white text-sm font-semibold">35%</span>
                         </div>
                         <div className="w-full bg-gray-700 rounded-full h-2">
@@ -865,7 +864,7 @@ const DashboardPage = () => {
                       <div className="flex space-x-2">
                         <button className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
                           <Settings className="h-4 w-4 inline mr-2" />
-                          Gerenciar
+                          {t('dashboard.manage')}
                         </button>
                         <button 
                           onClick={() => {
@@ -881,7 +880,7 @@ const DashboardPage = () => {
                           }}
                           className="flex-1 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
                         >
-                          Ver Analytics
+                          {t('dashboard.viewAnalytics')}
                         </button>
                       </div>
                     </div>
@@ -890,15 +889,15 @@ const DashboardPage = () => {
                     <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 border-dashed">
                       <div className="text-center py-8">
                         <Plus className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-                        <h4 className="text-white font-semibold mb-2">Criar Nova Pool</h4>
+                        <h4 className="text-white font-semibold mb-2">{t('dashboard.createPool')}</h4>
                         <p className="text-gray-400 text-sm mb-4">
-                          Configure uma nova pool de recompensas para sua comunidade
+                          {t('dashboard.configureNewPool')}
                         </p>
                         <button
                           onClick={() => setShowCreatePoolModal(true)}
                           className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
                         >
-                          Criar Pool
+                          {t('dashboard.createPool')}
                         </button>
                       </div>
                     </div>
@@ -919,7 +918,7 @@ const DashboardPage = () => {
                         }}
                         className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
                       >
-                        Fechar Analytics
+                        {t('dashboard.closeAnalytics')}
                       </button>
                     </div>
                     
@@ -938,36 +937,34 @@ const DashboardPage = () => {
         <div className="mt-12 bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
           <h3 className="text-white font-semibold text-lg mb-4 flex items-center space-x-2">
             <AlertCircle className="h-5 w-5 text-yellow-400" />
-            <span>Informações Importantes</span>
+            <span>{t('dashboard.importantInformation')}</span>
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">
-              <h4 className="text-gray-300 font-medium text-sm">Segurança e Controle</h4>
+              <h4 className="text-gray-300 font-medium text-sm">{t('dashboard.securityAndControl')}</h4>
               <ul className="text-gray-400 text-xs space-y-1">
-                <li>• Seus tokens permanecem sempre em sua carteira Stellar</li>
-                <li>• Você mantém controle total dos seus ativos durante a delegação</li>
-                <li>• Pode cancelar a delegação a qualquer momento sem penalidades</li>
-                <li>• Contratos inteligentes são verificados e auditáveis na rede Stellar</li>
+                <li>• {t('dashboard.tokensAlwaysRemainInWallet')}</li>
+                <li>• {t('dashboard.maintainControlDuringDelegation')}</li>
+                <li>• {t('dashboard.cancelAnytime')}</li>
+                <li>• {t('dashboard.verifiedContracts')}</li>
               </ul>
             </div>
             
             <div className="space-y-3">
-              <h4 className="text-gray-300 font-medium text-sm">Riscos e Responsabilidades</h4>
+              <h4 className="text-gray-300 font-medium text-sm">{t('dashboard.risksAndResponsibilities')}</h4>
               <ul className="text-gray-400 text-xs space-y-1">
-                <li>• Delegação de tokens envolve riscos inerentes ao DeFi</li>
-                <li>• Recompensas podem variar conforme condições de mercado</li>
-                <li>• Mantenha sua carteira e chaves privadas seguras</li>
-                <li>• Esta é uma versão de demonstração para fins educativos</li>
+                <li>• {t('dashboard.defiRisks')}</li>
+                <li>• {t('dashboard.rewardsVary')}</li>
+                <li>• {t('dashboard.keepWalletSecure')}</li>
+                <li>• {t('dashboard.demoVersion')}</li>
               </ul>
             </div>
           </div>
           
           <div className="mt-4 pt-4 border-t border-white/10">
             <p className="text-gray-500 text-xs text-center">
-              <strong>Aviso Legal:</strong> Esta plataforma está em desenvolvimento. 
-              Sempre faça sua própria pesquisa (DYOR) antes de delegar tokens. 
-              Não somos responsáveis por perdas financeiras.
+              <strong>{t('dashboard.legalDisclaimer')}</strong>
             </p>
           </div>
         </div>

@@ -62,6 +62,10 @@ const validateAmount = [
  * Validações para paginação
  */
 const validatePagination = [
+  query('page')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Página deve ser um número positivo'),
   query('limit')
     .optional()
     .isInt({ min: 1, max: 100 })
@@ -241,5 +245,5 @@ module.exports = {
   validatePoolCreation,
   validatePoolDelegation,
   sanitizeInput,
-  securityLogger: securityLoggerMiddleware
+  securityLoggerMiddleware
 };

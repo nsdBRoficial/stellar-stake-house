@@ -4,9 +4,9 @@ const { createClient } = require('@supabase/supabase-js');
 const StellarSdk = require('stellar-sdk');
 const {
   validateStellarAddress,
-  validateStellarAddressBody,
+  validatePagination,
   sanitizeInput,
-  securityLogger
+  securityLoggerMiddleware
 } = require('../middleware/validation');
 
 // Configuração do Supabase
@@ -23,7 +23,7 @@ const STAKING_TOKEN_CODE = process.env.STAKING_TOKEN_CODE || 'KALE';
 const STAKING_TOKEN_ISSUER = process.env.STAKING_TOKEN_ISSUER;
 
 // Aplicar middlewares de segurança em todas as rotas
-router.use(securityLogger);
+router.use(securityLoggerMiddleware);
 router.use(sanitizeInput);
 
 /**

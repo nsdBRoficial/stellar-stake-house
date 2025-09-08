@@ -6,7 +6,7 @@ const {
   validatePagination,
   validateHistoryFilters,
   sanitizeInput,
-  securityLogger
+  securityLoggerMiddleware
 } = require('../middleware/validation');
 
 // Configuração do Supabase
@@ -15,7 +15,7 @@ const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Aplicar middlewares de segurança em todas as rotas
-router.use(securityLogger);
+router.use(securityLoggerMiddleware);
 router.use(sanitizeInput);
 
 /**

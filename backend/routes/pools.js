@@ -6,8 +6,9 @@ const {
   validateStellarAddress,
   validatePoolCreation,
   validatePoolDelegation,
+  validatePagination,
   sanitizeInput,
-  securityLogger
+  securityLoggerMiddleware
 } = require('../middleware/validation');
 
 // Configuração do Supabase
@@ -24,7 +25,7 @@ const POOL_REWARDS_CONTRACT_ID = process.env.POOL_REWARDS_CONTRACT_ID;
 const STELLAR_NETWORK_PASSPHRASE = process.env.STELLAR_NETWORK_PASSPHRASE || 'Test SDF Network ; September 2015';
 
 // Aplicar middlewares de segurança em todas as rotas
-router.use(securityLogger);
+router.use(securityLoggerMiddleware);
 router.use(sanitizeInput);
 
 /**

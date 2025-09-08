@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useLanguage } from '../contexts/LanguageContext'
 import { 
   X, 
   Gift, 
@@ -11,6 +12,7 @@ import {
 } from 'lucide-react'
 
 const RewardsModal = ({ isOpen, onClose, tokens, onClaim }) => {
+  const { t } = useLanguage()
   const [selectedToken, setSelectedToken] = useState('KALE')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
@@ -22,7 +24,7 @@ const RewardsModal = ({ isOpen, onClose, tokens, onClaim }) => {
 
   const handleClaim = async () => {
     if (pendingRewards <= 0) {
-      setError('Não há recompensas disponíveis para resgate')
+      setError(t('staking.noRewardsAvailable'))
       return
     }
     
@@ -46,7 +48,7 @@ const RewardsModal = ({ isOpen, onClose, tokens, onClaim }) => {
       }, 2000)
       
     } catch (err) {
-      setError(err.message || 'Erro ao processar resgate')
+      setError(err.message || t('staking.errorProcessingClaim'))
     } finally {
       setIsLoading(false)
     }
@@ -77,7 +79,7 @@ const RewardsModal = ({ isOpen, onClose, tokens, onClaim }) => {
             <div className="bg-gradient-to-r from-orange-500 to-red-600 p-2 rounded-xl">
               <Gift className="h-6 w-6 text-white" />
             </div>
-            <h2 className="text-xl font-bold text-white">Resgatar Recompensas</h2>
+            <h2 className="text-xl font-bold text-white">{t('staking.claimRewards')}</h2>
           </div>
           <button
             onClick={onClose}
@@ -92,9 +94,9 @@ const RewardsModal = ({ isOpen, onClose, tokens, onClaim }) => {
           {success ? (
             <div className="text-center py-8">
               <CheckCircle className="h-16 w-16 text-green-400 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-white mb-2">Resgate Realizado!</h3>
+              <h3 className="text-xl font-bold text-white mb-2">{t('staking.claimCompleted')}</h3>
               <p className="text-gray-400">
-                {formatNumber(pendingRewards)} {selectedToken} foram resgatados com sucesso
+                {formatNumber(pendingRewards)} {selectedToken} {t('staking.claimedSuccessfully')}
               </p>
             </div>
           ) : (
@@ -102,7 +104,7 @@ const RewardsModal = ({ isOpen, onClose, tokens, onClaim }) => {
               {/* Seletor de Token */}
               <div className="mb-6">
                 <label className="block text-gray-300 text-sm font-medium mb-2">
-                  Selecionar Token para Resgate
+                  {t('staking.selectTokenClaim')}
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                   {Object.entries(tokens || {}).map(([symbol, tokenData]) => (
@@ -133,7 +135,7 @@ const RewardsModal = ({ isOpen, onClose, tokens, onClaim }) => {
                           <p className="text-orange-400 font-semibold text-sm">
                             {formatNumber(tokenData.pendingRewards || 0)}
                           </p>
-                          <p className="text-gray-400 text-xs">pendentes</p>
+                          <p className="text-gray-400 text-xs">{t('staking.pending')}</p>
                         </div>
                       </div>
                     </button>
@@ -146,13 +148,12 @@ const RewardsModal = ({ isOpen, onClose, tokens, onClaim }) => {
                 <div className="flex items-start space-x-3">
                   <Info className="h-5 w-5 text-orange-400 flex-shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="text-orange-200 font-medium mb-1">Recompensas Verificadas via Reflector Oracle</h4>
+                    <h4 className="text-orange-200 font-medium mb-1">{t('staking.verifiedRewardsTitle')}</h4>
                     <p className="text-orange-200 text-sm mb-2">
-                      Recompensas calculadas automaticamente por contratos inteligentes com dados de preços 
-                      descentralizados do Reflector Oracle. Resgate direto para sua carteira Stellar.
+                      {t('staking.verifiedRewardsDesc')}
                     </p>
                     <p className="text-orange-300 text-xs">
-                      ✓ Cálculos automáticos • ✓ Pricing descentralizado • ✓ Transferência direta para carteira • ✓ Sem taxas ocultas
+                      {t('staking.verifiedRewardsFeatures')}
                     </p>
                   </div>
                 </div>
@@ -162,14 +163,14 @@ const RewardsModal = ({ isOpen, onClose, tokens, onClaim }) => {
               <div className="bg-white/5 rounded-xl p-6 mb-6">
                 <h3 className="text-white font-semibold text-lg mb-4 flex items-center space-x-2">
                   <TrendingUp className="h-5 w-5 text-green-400" />
-                  <span>Resumo de Recompensas</span>
+                  <span>{t('staking.availableRewards')}</span>
                 </h3>
                 
                 <div className="space-y-4">
                   {/* Recompensas Pendentes */}
                   <div className="flex justify-between items-center p-4 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-xl border border-orange-500/30">
                     <div>
-                      <p className="text-orange-200 text-sm font-medium">Recompensas Pendentes</p>
+                      <p className="text-orange-200 text-sm font-medium">{t('staking.pending')}</p>
                       <p className="text-white text-2xl font-bold">{formatNumber(pendingRewards)} {selectedToken}</p>
                       <p className="text-orange-200 text-xs">≈ {formatCurrency(pendingRewards * (currentToken.price || 0))}</p>
                     </div>
@@ -178,7 +179,7 @@ const RewardsModal = ({ isOpen, onClose, tokens, onClaim }) => {
                   
                   {/* Total Ganho */}
                   <div className="flex justify-between items-center py-3 border-b border-white/10">
-                    <span className="text-gray-400">Total Ganho na Plataforma:</span>
+                    <span className="text-gray-400">{t('staking.totalEarned')}:</span>
                     <div className="text-right">
                       <span className="text-green-400 font-semibold">{formatNumber(totalEarned)} {selectedToken}</span>
                       <p className="text-gray-400 text-xs">≈ {formatCurrency(totalEarned * (currentToken.price || 0))}</p>
@@ -187,19 +188,19 @@ const RewardsModal = ({ isOpen, onClose, tokens, onClaim }) => {
                   
                   {/* APY Atual */}
                   <div className="flex justify-between items-center py-3 border-b border-white/10">
-                    <span className="text-gray-400">APY Atual:</span>
+                    <span className="text-gray-400">{t('staking.currentApy')}:</span>
                     <span className="text-green-400 font-semibold">{formatNumber(currentToken.apy || 0, 1)}%</span>
                   </div>
                   
                   {/* Saldo Delegado */}
                   <div className="flex justify-between items-center py-3 border-b border-white/10">
-                    <span className="text-gray-400">Saldo Delegado:</span>
+                    <span className="text-gray-400">{t('dashboard.delegated')}:</span>
                     <span className="text-white font-semibold">{formatNumber(currentToken.delegatedAmount || 0)} {selectedToken}</span>
                   </div>
                   
                   {/* Próxima Recompensa */}
                   <div className="flex justify-between items-center py-3">
-                    <span className="text-gray-400">Próxima Recompensa:</span>
+                    <span className="text-gray-400">Next Reward:</span>
                     <span className="text-white font-semibold">~24h</span>
                   </div>
                 </div>
@@ -211,9 +212,9 @@ const RewardsModal = ({ isOpen, onClose, tokens, onClaim }) => {
                   <div className="flex items-center space-x-3">
                     <AlertCircle className="h-5 w-5 text-yellow-400" />
                     <div>
-                      <h4 className="text-yellow-200 font-medium">Nenhuma Recompensa Disponível</h4>
+                      <h4 className="text-yellow-200 font-medium">{t('staking.noRewardsAvailable')}</h4>
                       <p className="text-yellow-200 text-sm">
-                        Você não possui recompensas pendentes para resgate no momento.
+                        You don't have any pending rewards to claim at the moment.
                       </p>
                     </div>
                   </div>
@@ -237,15 +238,15 @@ const RewardsModal = ({ isOpen, onClose, tokens, onClaim }) => {
                 {isLoading ? (
                   <>
                     <Loader2 className="h-5 w-5 animate-spin text-white" />
-                    <span className="text-white font-semibold">Processando Resgate...</span>
+                    <span className="text-white font-semibold">{t('staking.processingClaim')}</span>
                   </>
                 ) : (
                   <>
                     <Gift className="h-5 w-5 text-white" />
                     <span className="text-white font-semibold">
                       {pendingRewards > 0 
-                        ? `Resgatar ${formatNumber(pendingRewards)} ${selectedToken}` 
-                        : 'Nenhuma Recompensa Disponível'
+                        ? `${t('staking.claimNow')} ${formatNumber(pendingRewards)} ${selectedToken}` 
+                        : t('staking.noRewardsAvailable')
                       }
                     </span>
                     {pendingRewards > 0 && <ArrowRight className="h-5 w-5 text-white" />}
@@ -256,7 +257,7 @@ const RewardsModal = ({ isOpen, onClose, tokens, onClaim }) => {
               {/* Disclaimer */}
               <div className="mt-4 text-center">
                 <p className="text-gray-400 text-xs">
-                  As recompensas são transferidas diretamente para sua carteira Stellar.
+                  {t('staking.claimDisclaimer')}
                 </p>
               </div>
             </>
