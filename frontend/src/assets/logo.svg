@@ -1,0 +1,43 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield Background -->
+  <path d="M200 20C200 20 320 60 320 200C320 340 200 380 200 380C200 380 80 340 80 200C80 60 200 20 200 20Z" fill="#1E3A8A" stroke="#1E40AF" stroke-width="4"/>
+  
+  <!-- House Shape -->
+  <path d="M120 180L200 120L280 180V280H120V180Z" fill="#10B981" stroke="#059669" stroke-width="3"/>
+  
+  <!-- House Roof -->
+  <path d="M110 180L200 100L290 180L280 170L200 110L120 170L110 180Z" fill="#10B981"/>
+  
+  <!-- Chimney -->
+  <rect x="240" y="130" width="20" height="40" fill="#10B981"/>
+  
+  <!-- Rocket Body -->
+  <ellipse cx="200" cy="220" rx="25" ry="60" fill="#10B981"/>
+  
+  <!-- Rocket Nose -->
+  <path d="M200 160L215 190L185 190Z" fill="#059669"/>
+  
+  <!-- Rocket Window -->
+  <circle cx="200" cy="200" r="8" fill="#FFFFFF"/>
+  
+  <!-- Rocket Fins -->
+  <path d="M175 250L185 280L175 280Z" fill="#059669"/>
+  <path d="M225 250L215 280L225 280Z" fill="#059669"/>
+  
+  <!-- Rocket Flames -->
+  <path d="M190 280L200 320L210 280" fill="#EF4444" opacity="0.8"/>
+  <path d="M185 285L200 315L215 285" fill="#F97316" opacity="0.6"/>
+  <path d="M195 290L200 310L205 290" fill="#FCD34D" opacity="0.4"/>
+  
+  <!-- Stars -->
+  <circle cx="150" cy="100" r="3" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="250" cy="120" r="2" fill="#FFFFFF" opacity="0.6"/>
+  <circle cx="130" cy="140" r="2" fill="#FFFFFF" opacity="0.7"/>
+  <circle cx="270" cy="160" r="3" fill="#FFFFFF" opacity="0.5"/>
+  
+  <!-- Text Shadow -->
+  <text x="200" y="360" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1E3A8A" opacity="0.3">STELLAR STAKE HOUSE</text>
+  
+  <!-- Main Text -->
+  <text x="200" y="358" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1E40AF">STELLAR STAKE HOUSE</text>
+</svg>

@@ -1,0 +1,369 @@
+{
+  "timestamp": "2025-09-07T20:16:26.873Z",
+  "summary": {
+    "cpu": {
+      "average": 18,
+      "max": 18,
+      "min": 18
+    },
+    "memory": {
+      "average": 70.37423852653234,
+      "max": 72.94272079969397,
+      "min": 68.2459971880376
+    },
+    "stellar": {
+      "averageResponseTime": 1889.7142857142858,
+      "maxResponseTime": 22698,
+      "minResponseTime": 0,
+      "errorRate": 6.666666666666667
+    }
+  },
+  "recommendations": [
+    {
+      "category": "Stellar",
+      "priority": "MEDIUM",
+      "issue": "API Stellar com resposta lenta",
+      "recommendation": "Implemente cache para dados da Stellar ou use múltiplos endpoints"
+    }
+  ],
+  "metrics": {
+    "cpu": [
+      {
+        "timestamp": "2025-09-07T20:14:47.020Z",
+        "cores": 6,
+        "loadAverage1m": 0,
+        "loadAverage5m": 0,
+        "loadAverage15m": 0,
+        "usage": 18
+      },
+      {
+        "timestamp": "2025-09-07T20:14:57.024Z",
+        "cores": 6,
+        "loadAverage1m": 0,
+        "loadAverage5m": 0,
+        "loadAverage15m": 0,
+        "usage": 18
+      },
+      {
+        "timestamp": "2025-09-07T20:15:07.034Z",
+        "cores": 6,
+        "loadAverage1m": 0,
+        "loadAverage5m": 0,
+        "loadAverage15m": 0,
+        "usage": 18
+      },
+      {
+        "timestamp": "2025-09-07T20:15:17.035Z",
+        "cores": 6,
+        "loadAverage1m": 0,
+        "loadAverage5m": 0,
+        "loadAverage15m": 0,
+        "usage": 18
+      },
+      {
+        "timestamp": "2025-09-07T20:15:27.043Z",
+        "cores": 6,
+        "loadAverage1m": 0,
+        "loadAverage5m": 0,
+        "loadAverage15m": 0,
+        "usage": 18
+      },
+      {
+        "timestamp": "2025-09-07T20:15:37.049Z",
+        "cores": 6,
+        "loadAverage1m": 0,
+        "loadAverage5m": 0,
+        "loadAverage15m": 0,
+        "usage": 18
+      },
+      {
+        "timestamp": "2025-09-07T20:15:47.062Z",
+        "cores": 6,
+        "loadAverage1m": 0,
+        "loadAverage5m": 0,
+        "loadAverage15m": 0,
+        "usage": 18
+      },
+      {
+        "timestamp": "2025-09-07T20:15:57.077Z",
+        "cores": 6,
+        "loadAverage1m": 0,
+        "loadAverage5m": 0,
+        "loadAverage15m": 0,
+        "usage": 18
+      },
+      {
+        "timestamp": "2025-09-07T20:16:07.091Z",
+        "cores": 6,
+        "loadAverage1m": 0,
+        "loadAverage5m": 0,
+        "loadAverage15m": 0,
+        "usage": 18
+      },
+      {
+        "timestamp": "2025-09-07T20:16:17.104Z",
+        "cores": 6,
+        "loadAverage1m": 0,
+        "loadAverage5m": 0,
+        "loadAverage15m": 0,
+        "usage": 18
+      }
+    ],
+    "memory": [
+      {
+        "timestamp": "2025-09-07T20:14:47.020Z",
+        "total": 17121275904,
+        "used": 12407869440,
+        "free": 4713406464,
+        "usagePercent": 72.470471882888,
+        "processMemory": {
+          "rss": 69730304,
+          "heapTotal": 21135360,
+          "heapUsed": 19976104,
+          "external": 3731429,
+          "arrayBuffers": 359377
+        }
+      },
+      {
+        "timestamp": "2025-09-07T20:14:57.024Z",
+        "total": 17121275904,
+        "used": 12407480320,
+        "free": 4713795584,
+        "usagePercent": 72.46819915507157,
+        "processMemory": {
+          "rss": 69910528,
+          "heapTotal": 21659648,
+          "heapUsed": 19759384,
+          "external": 3751876,
+          "arrayBuffers": 374185
+        }
+      },
+      {
+        "timestamp": "2025-09-07T20:15:07.034Z",
+        "total": 17121275904,
+        "used": 12488724480,
+        "free": 4632551424,
+        "usagePercent": 72.94272079969397,
+        "processMemory": {
+          "rss": 69922816,
+          "heapTotal": 21659648,
+          "heapUsed": 20029448,
+          "external": 3779736,
+          "arrayBuffers": 396406
+        }
+      },
+      {
+        "timestamp": "2025-09-07T20:15:17.035Z",
+        "total": 17121275904,
+        "used": 12481540096,
+        "free": 4639735808,
+        "usagePercent": 72.90075906716724,
+        "processMemory": {
+          "rss": 70082560,
+          "heapTotal": 21659648,
+          "heapUsed": 19719720,
+          "external": 3778078,
+          "arrayBuffers": 406026
+        }
+      },
+      {
+        "timestamp": "2025-09-07T20:15:27.043Z",
+        "total": 17121275904,
+        "used": 12314533888,
+        "free": 4806742016,
+        "usagePercent": 71.92532821180102,
+        "processMemory": {
+          "rss": 70094848,
+          "heapTotal": 21659648,
+          "heapUsed": 19978176,
+          "external": 3796941,
+          "arrayBuffers": 424889
+        }
+      },
+      {
+        "timestamp": "2025-09-07T20:15:37.049Z",
+        "total": 17121275904,
+        "used": 12314169344,
+        "free": 4807106560,
+        "usagePercent": 71.92319902468877,
+        "processMemory": {
+          "rss": 70098944,
+          "heapTotal": 21659648,
+          "heapUsed": 20224040,
+          "external": 3815804,
+          "arrayBuffers": 443752
+        }
+      },
+      {
+        "timestamp": "2025-09-07T20:15:47.062Z",
+        "total": 17121275904,
+        "used": 12086886400,
+        "free": 5034389504,
+        "usagePercent": 70.5957106688303,
+        "processMemory": {
+          "rss": 70250496,
+          "heapTotal": 22708224,
+          "heapUsed": 19973600,
+          "external": 3830521,
+          "arrayBuffers": 458469
+        }
+      },
+      {
+        "timestamp": "2025-09-07T20:15:57.077Z",
+        "total": 17121275904,
+        "used": 12085403648,
+        "free": 5035872256,
+        "usagePercent": 70.58705037967712,
+        "processMemory": {
+          "rss": 70332416,
+          "heapTotal": 22708224,
+          "heapUsed": 20227832,
+          "external": 3849384,
+          "arrayBuffers": 477332
+        }
+      },
+      {
+        "timestamp": "2025-09-07T20:16:07.091Z",
+        "total": 17121275904,
+        "used": 12101816320,
+        "free": 5019459584,
+        "usagePercent": 70.68291164662958,
+        "processMemory": {
+          "rss": 70434816,
+          "heapTotal": 22708224,
+          "heapUsed": 20502400,
+          "external": 3877244,
+          "arrayBuffers": 499553
+        }
+      },
+      {
+        "timestamp": "2025-09-07T20:16:17.104Z",
+        "total": 17121275904,
+        "used": 12097069056,
+        "free": 5024206848,
+        "usagePercent": 70.65518436726899,
+        "processMemory": {
+          "rss": 70598656,
+          "heapTotal": 22183936,
+          "heapUsed": 20159504,
+          "external": 3881591,
+          "arrayBuffers": 509539
+        }
+      }
+    ],
+    "database": [
+      {
+        "timestamp": "2025-09-07T20:14:47.020Z",
+        "connectionTime": 36,
+        "queryTime": 0,
+        "error": "TypeError: fetch failed"
+      },
+      {
+        "timestamp": "2025-09-07T20:14:57.024Z",
+        "connectionTime": 29,
+        "queryTime": 0,
+        "error": "TypeError: fetch failed"
+      },
+      {
+        "timestamp": "2025-09-07T20:15:07.034Z",
+        "connectionTime": 29,
+        "queryTime": 0,
+        "error": "TypeError: fetch failed"
+      },
+      {
+        "timestamp": "2025-09-07T20:15:17.035Z",
+        "connectionTime": 32,
+        "queryTime": 0,
+        "error": "TypeError: fetch failed"
+      },
+      {
+        "timestamp": "2025-09-07T20:15:27.043Z",
+        "connectionTime": 32,
+        "queryTime": 0,
+        "error": "TypeError: fetch failed"
+      },
+      {
+        "timestamp": "2025-09-07T20:15:37.049Z",
+        "connectionTime": 28,
+        "queryTime": 0,
+        "error": "TypeError: fetch failed"
+      },
+      {
+        "timestamp": "2025-09-07T20:15:47.062Z",
+        "connectionTime": 29,
+        "queryTime": 0,
+        "error": "TypeError: fetch failed"
+      },
+      {
+        "timestamp": "2025-09-07T20:15:57.077Z",
+        "connectionTime": 34,
+        "queryTime": 0,
+        "error": "TypeError: fetch failed"
+      },
+      {
+        "timestamp": "2025-09-07T20:16:07.091Z",
+        "connectionTime": 35,
+        "queryTime": 0,
+        "error": "TypeError: fetch failed"
+      },
+      {
+        "timestamp": "2025-09-07T20:16:17.104Z",
+        "connectionTime": 36,
+        "queryTime": 0,
+        "error": "TypeError: fetch failed"
+      }
+    ],
+    "stellar": [
+      {
+        "timestamp": "2025-09-07T20:14:47.020Z",
+        "horizonResponseTime": 657,
+        "error": null
+      },
+      {
+        "timestamp": "2025-09-07T20:14:57.024Z",
+        "horizonResponseTime": 709,
+        "error": null
+      },
+      {
+        "timestamp": "2025-09-07T20:15:07.034Z",
+        "horizonResponseTime": 475,
+        "error": null
+      },
+      {
+        "timestamp": "2025-09-07T20:15:17.035Z",
+        "horizonResponseTime": 474,
+        "error": null
+      },
+      {
+        "timestamp": "2025-09-07T20:15:27.043Z",
+        "horizonResponseTime": 474,
+        "error": null
+      },
+      {
+        "timestamp": "2025-09-07T20:15:37.049Z",
+        "horizonResponseTime": 650,
+        "error": null
+      },
+      {
+        "timestamp": "2025-09-07T20:15:47.062Z",
+        "horizonResponseTime": 475,
+        "error": null
+      },
+      {
+        "timestamp": "2025-09-07T20:15:57.077Z",
+        "horizonResponseTime": 656,
+        "error": null
+      },
+      {
+        "timestamp": "2025-09-07T20:16:07.091Z",
+        "horizonResponseTime": 504,
+        "error": null
+      },
+      {
+        "timestamp": "2025-09-07T20:16:17.104Z",
+        "horizonResponseTime": 472,
+        "error": null
+      }
+    ]
+  }
+}

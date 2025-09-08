@@ -1,0 +1,65 @@
+version: '3.8'
+
+# Override para ambiente de desenvolvimento
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+    env_file:
+      - ./backend/.env-dev
+    command: npm run dev
+    ports:
+      - "3001:3001"
+      - "9229:9229" # Debug port
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - "5173:5173"
+    command: npm run dev
+    depends_on:
+      - backend
+
+  # Database para desenvolvimento (opcional)
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: stellar_stake_house_dev
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./backend/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - stellar-network
+
+  # Redis para desenvolvimento
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_dev_data:/data
+    networks:
+      - stellar-network
+
+volumes:
+  postgres_dev_data:
+  redis_dev_data:

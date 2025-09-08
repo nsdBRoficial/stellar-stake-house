@@ -1,0 +1,1 @@
+C:\Users\Usuário\Documents\GitHub\stellar-stake-house\contracts\pool_rewards\target\wasm32-unknown-unknown\release\pool_rewards.wasm: C:\Users\Usuário\Documents\GitHub\stellar-stake-house\contracts\pool_rewards\src\lib.rs
