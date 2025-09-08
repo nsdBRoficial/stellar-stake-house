@@ -4,6 +4,7 @@ const { createClient } = require('@supabase/supabase-js');
 const StellarSdk = require('stellar-sdk');
 const {
   validateStellarAddress,
+  validateStellarAddressBody,
   validatePagination,
   sanitizeInput,
   securityLoggerMiddleware

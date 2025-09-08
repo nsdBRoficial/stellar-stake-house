@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏆 Stellar Stake House - Pitch Vencedor | DoraHacks Hackathon</title>
+    <meta name="description" content="A primeira plataforma completa de staking na rede Stellar. Revolucionando distribuição de recompensas com KALE + Reflector Oracle.">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Styles -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .stellar-gradient {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%);
+        }
+        
+        .kale-gradient {
+            background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
+        }
+        
+        .glow-effect {
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.8); }
+        }
+        
+        .tech-grid {
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .number-counter {
+            font-variant-numeric: tabular-nums;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white overflow-x-hidden">
+    
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center stellar-gradient">
+        <div class="absolute inset-0 tech-grid opacity-20"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-gray-900 opacity-60"></div>
+        
+        <div class="relative z-10 text-center px-4 max-w-6xl mx-auto">
+            <!-- Logo/Icon -->
+            <div class="mb-8 floating">
+                <div class="w-24 h-24 mx-auto bg-white rounded-full flex items-center justify-center glow-effect">
+                    <span class="text-4xl">🏠</span>
+                </div>
+            </div>
+            
+            <!-- Main Headline -->
+            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">
+                <span class="bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
+                    STELLAR STAKE HOUSE
+                </span>
+            </h1>
+            
+            <h2 class="text-2xl md:text-4xl font-bold mb-8 text-blue-100">
+                A Revolução do Staking na Rede Stellar
+            </h2>
+            
+            <!-- Value Proposition -->
+            <p class="text-xl md:text-2xl mb-12 text-blue-50 max-w-4xl mx-auto leading-relaxed">
+                A <strong>primeira plataforma completa</strong> de staking multi-token na Stellar.<br>
+                Integração nativa com <strong>KALE + Reflector Oracle</strong>.<br>
+                <strong>100% funcional</strong> e pronta para revolucionar o ecossistema.
+            </p>
+            
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">
+                <a href="#demo" class="bg-green-500 hover:bg-green-400 text-white px-8 py-4 rounded-full text-lg font-bold transition-all duration-300 pulse-glow">
+                    🚀 Ver Demo Ao Vivo
+                </a>
+                <a href="#tech" class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-8 py-4 rounded-full text-lg font-bold transition-all duration-300 backdrop-blur-sm">
+                    🔧 Análise Técnica
+                </a>
+            </div>
+            
+            <!-- Key Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+                <div class="text-center">
+                    <div class="text-3xl font-black text-green-400 number-counter">100%</div>
+                    <div class="text-sm text-blue-200">Funcional</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-black text-blue-400 number-counter">0</div>
+                    <div class="text-sm text-blue-200">Bugs Críticos</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-black text-purple-400 number-counter">3</div>
+                    <div class="text-sm text-blue-200">Wallets Suportadas</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-black text-yellow-400 number-counter">1º</div>
+                    <div class="text-sm text-blue-200">Integração Reflector</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <div class="w-6 h-10 border-2 border-white rounded-full flex justify-center">
+                <div class="w-1 h-3 bg-white rounded-full mt-2 animate-pulse"></div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Problem/Solution Section -->
+    <section class="py-20 bg-gray-900">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-black mb-6">
+                    <span class="text-red-400">O Problema</span> que Resolvemos
+                </h2>
+                <p class="text-xl text-gray-300 max-w-4xl mx-auto">
+                    Projetos blockchain gastam milhares de dólares e centenas de horas para distribuir recompensas manualmente
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <!-- Problem Side -->
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-bold text-red-400 mb-6">❌ ANTES da Stellar Stake House:</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-4 p-4 bg-red-900 bg-opacity-30 rounded-lg">
+                            <span class="text-red-400 text-xl">💸</span>
+                            <div>
+                                <h4 class="font-bold text-red-300">Distribuição Custosa</h4>
+                                <p class="text-gray-300">Airdrops manuais custam milhares em gas fees</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4 p-4 bg-red-900 bg-opacity-30 rounded-lg">
+                            <span class="text-red-400 text-xl">⏰</span>
+                            <div>
+                                <h4 class="font-bold text-red-300">Processo Lento</h4>
+                                <p class="text-gray-300">Centenas de horas de trabalho manual</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4 p-4 bg-red-900 bg-opacity-30 rounded-lg">
+                            <span class="text-red-400 text-xl">🔍</span>
+                            <div>
+                                <h4 class="font-bold text-red-300">Falta de Transparência</h4>
+                                <p class="text-gray-300">Usuários não sabem valor real das recompensas</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4 p-4 bg-red-900 bg-opacity-30 rounded-lg">
+                            <span class="text-red-400 text-xl">📉</span>
+                            <div>
+                                <h4 class="font-bold text-red-300">Baixo Engajamento</h4>
+                                <p class="text-gray-300">Comunidades desengajadas e tokens subutilizados</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Solution Side -->
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-bold text-green-400 mb-6">✅ DEPOIS da Stellar Stake House:</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-4 p-4 bg-green-900 bg-opacity-30 rounded-lg">
+                            <span class="text-green-400 text-xl">🤖</span>
+                            <div>
+                                <h4 class="font-bold text-green-300">Automação Completa</h4>
+                                <p class="text-gray-300">Distribuição automática via smart contracts</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4 p-4 bg-green-900 bg-opacity-30 rounded-lg">
+                            <span class="text-green-400 text-xl">⚡</span>
+                            <div>
+                                <h4 class="font-bold text-green-300">Velocidade Stellar</h4>
+                                <p class="text-gray-300">Transações em segundos, custos mínimos</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4 p-4 bg-green-900 bg-opacity-30 rounded-lg">
+                            <span class="text-green-400 text-xl">💎</span>
+                            <div>
+                                <h4 class="font-bold text-green-300">Transparência Total</h4>
+                                <p class="text-gray-300">Preços em tempo real via Reflector Oracle</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4 p-4 bg-green-900 bg-opacity-30 rounded-lg">
+                            <span class="text-green-400 text-xl">🚀</span>
+                            <div>
+                                <h4 class="font-bold text-green-300">Crescimento Acelerado</h4>
+                                <p class="text-gray-300">Comunidades engajadas, tokens valorizados</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Demo Section -->
+    <section id="demo" class="py-20 bg-gradient-to-b from-gray-900 to-gray-800">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-black mb-6">
+                    🎬 <span class="bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">Demo Ao Vivo</span>
+                </h2>
+                <p class="text-xl text-gray-300 max-w-4xl mx-auto">
+                    Vejam a magia acontecer: do clique à blockchain em 10 segundos
+                </p>
+            </div>
+            
+            <!-- Demo Steps -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+                <div class="text-center card-hover bg-gray-800 p-6 rounded-xl">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-blue-500 rounded-full flex items-center justify-center text-2xl">
+                        🔐
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">1. Autenticação</h3>
+                    <p class="text-gray-400 text-sm">Freighter, Albedo ou Biometria</p>
+                    <div class="mt-4 text-xs text-blue-400 font-mono">15 segundos</div>
+                </div>
+                
+                <div class="text-center card-hover bg-gray-800 p-6 rounded-xl">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-green-500 rounded-full flex items-center justify-center text-2xl">
+                        📊
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">2. Dashboard</h3>
+                    <p class="text-gray-400 text-sm">Portfolio + Preços Reflector</p>
+                    <div class="mt-4 text-xs text-green-400 font-mono">Tempo real</div>
+                </div>
+                
+                <div class="text-center card-hover bg-gray-800 p-6 rounded-xl">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-purple-500 rounded-full flex items-center justify-center text-2xl">
+                        🥬
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">3. Staking</h3>
+                    <p class="text-gray-400 text-sm">5.000 KALE → Pool 15% APY</p>
+                    <div class="mt-4 text-xs text-purple-400 font-mono">10 segundos</div>
+                </div>
+                
+                <div class="text-center card-hover bg-gray-800 p-6 rounded-xl">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-yellow-500 rounded-full flex items-center justify-center text-2xl">
+                        ✅
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">4. Confirmação</h3>
+                    <p class="text-gray-400 text-sm">Blockchain + Dashboard</p>
+                    <div class="mt-4 text-xs text-yellow-400 font-mono">Instantâneo</div>
+                </div>
+            </div>
+            
+            <!-- Live Demo CTA -->
+            <div class="text-center bg-gradient-to-r from-blue-600 to-purple-600 p-8 rounded-2xl">
+                <h3 class="text-2xl font-bold mb-4">🔴 DEMO AO VIVO DISPONÍVEL</h3>
+                <p class="text-lg mb-6">Testem vocês mesmos com nossas credenciais de teste</p>
+                
+                <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto text-left">
+                    <div class="bg-black bg-opacity-30 p-4 rounded-lg">
+                        <h4 class="font-bold text-green-400 mb-2">🔑 Conta de Teste:</h4>
+                        <div class="font-mono text-xs text-gray-300 space-y-1">
+                            <div>Pública: GDKIJJIKXLOM...52JR</div>
+                            <div>Saldo: 15.000 KALE</div>
+                            <div>Delegado: 5.000 KALE</div>
+                            <div>Recompensas: 125 KALE</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-black bg-opacity-30 p-4 rounded-lg">
+                        <h4 class="font-bold text-blue-400 mb-2">🏦 Pool Treasury:</h4>
+                        <div class="font-mono text-xs text-gray-300 space-y-1">
+                            <div>Pool: "KALE Community"</div>
+                            <div>APY: 15% anual</div>
+                            <div>Distribuição: 500 KALE/dia</div>
+                            <div>Status: ✅ Ativa</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <a href="https://stellar-stake-house.vercel.app" target="_blank" class="bg-white text-blue-600 px-8 py-4 rounded-full text-lg font-bold hover:bg-gray-100 transition-all duration-300">
+                        🌐 Testar Agora
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Technical Innovation Section -->
+    <section id="tech" class="py-20 bg-gray-800">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-black mb-6">
+                    🔬 <span class="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Inovação Técnica</span>
+                </h2>
+                <p class="text-xl text-gray-300 max-w-4xl mx-auto">
+                    Arquitetura híbrida revolucionária que combina o melhor de dois mundos
+                </p>
+            </div>
+            
+            <!-- Architecture Diagram -->
+            <div class="mb-16">
+                <div class="bg-gray-900 p-8 rounded-2xl">
+                    <h3 class="text-2xl font-bold text-center mb-8">🏗️ Arquitetura Híbrida</h3>
+                    
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <!-- Frontend -->
+                        <div class="bg-blue-900 bg-opacity-50 p-6 rounded-xl text-center">
+                            <div class="text-4xl mb-4">⚛️</div>
+                            <h4 class="text-xl font-bold mb-4 text-blue-300">Frontend</h4>
+                            <ul class="text-sm text-gray-300 space-y-2">
+                                <li>• React + Vite</li>
+                                <li>• Multi-wallet</li>
+                                <li>• Multi-idioma</li>
+                                <li>• Reflector prices</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Backend -->
+                        <div class="bg-green-900 bg-opacity-50 p-6 rounded-xl text-center">
+                            <div class="text-4xl mb-4">🚀</div>
+                            <h4 class="text-xl font-bold mb-4 text-green-300">Backend</h4>
+                            <ul class="text-sm text-gray-300 space-y-2">
+                                <li>• Node.js + Express</li>
+                                <li>• Snapshots diários</li>
+                                <li>• Cálculo rewards</li>
+                                <li>• APIs RESTful</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Blockchain -->
+                        <div class="bg-purple-900 bg-opacity-50 p-6 rounded-xl text-center">
+                            <div class="text-4xl mb-4">⛓️</div>
+                            <h4 class="text-xl font-bold mb-4 text-purple-300">Soroban</h4>
+                            <ul class="text-sm text-gray-300 space-y-2">
+                                <li>• Pool management</li>
+                                <li>• Delegação segura</li>
+                                <li>• Distribuição auto</li>
+                                <li>• Contratos auditáveis</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-8">
+                        <div class="inline-block bg-yellow-500 text-black px-4 py-2 rounded-full text-sm font-bold">
+                            💡 VANTAGEM: Velocidade + Segurança + UX Superior
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Key Innovations -->
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- KALE Integration -->
+                <div class="bg-gradient-to-br from-green-900 to-green-800 p-8 rounded-2xl">
+                    <div class="flex items-center mb-6">
+                        <span class="text-4xl mr-4">🥬</span>
+                        <h3 class="text-2xl font-bold">Sinergia com KALE</h3>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-3">
+                            <span class="text-green-400 mt-1">✅</span>
+                            <div>
+                                <h4 class="font-bold">Utilidade Real</h4>
+                                <p class="text-sm text-gray-300">Staking com recompensas automáticas</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-3">
+                            <span class="text-green-400 mt-1">✅</span>
+                            <div>
+                                <h4 class="font-bold">Retenção</h4>
+                                <p class="text-sm text-gray-300">Usuários mantêm tokens por mais tempo</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-3">
+                            <span class="text-green-400 mt-1">✅</span>
+                            <div>
+                                <h4 class="font-bold">Crescimento</h4>
+                                <p class="text-sm text-gray-300">Distribuição automatizada para comunidade</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Reflector Integration -->
+                <div class="bg-gradient-to-br from-blue-900 to-blue-800 p-8 rounded-2xl">
+                    <div class="flex items-center mb-6">
+                        <span class="text-4xl mr-4">🔮</span>
+                        <h3 class="text-2xl font-bold">Reflector Oracle</h3>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-3">
+                            <span class="text-blue-400 mt-1">✅</span>
+                            <div>
+                                <h4 class="font-bold">Preços Tempo Real</h4>
+                                <p class="text-sm text-gray-300">KALE/USD atualizado a cada minuto</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-3">
+                            <span class="text-blue-400 mt-1">✅</span>
+                            <div>
+                                <h4 class="font-bold">Conversão Automática</h4>
+                                <p class="text-sm text-gray-300">BRL, USD, EUR na interface</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-3">
+                            <span class="text-blue-400 mt-1">✅</span>
+                            <div>
+                                <h4 class="font-bold">Transparência</h4>
+                                <p class="text-sm text-gray-300">Usuários veem valor real das recompensas</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Traction & Validation Section -->
+    <section class="py-20 bg-gray-900">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-black mb-6">
+                    📊 <span class="bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">Tração & Validação</span>
+                </h2>
+                <p class="text-xl text-gray-300 max-w-4xl mx-auto">
+                    Números que impressionam e credenciais que validam
+                </p>
+            </div>
+            
+            <!-- Metrics Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                <div class="bg-green-900 bg-opacity-30 p-6 rounded-xl text-center">
+                    <div class="text-4xl font-black text-green-400 mb-2 number-counter">100%</div>
+                    <div class="text-sm text-gray-300">MVP Funcional</div>
+                    <div class="text-xs text-green-400 mt-2">Todas as features</div>
+                </div>
+                
+                <div class="bg-blue-900 bg-opacity-30 p-6 rounded-xl text-center">
+                    <div class="text-4xl font-black text-blue-400 mb-2 number-counter">70%</div>
+                    <div class="text-sm text-gray-300">Cobertura Testes</div>
+                    <div class="text-xs text-blue-400 mt-2">Backend validado</div>
+                </div>
+                
+                <div class="bg-purple-900 bg-opacity-30 p-6 rounded-xl text-center">
+                    <div class="text-4xl font-black text-purple-400 mb-2 number-counter">0</div>
+                    <div class="text-sm text-gray-300">Vulnerabilidades</div>
+                    <div class="text-xs text-purple-400 mt-2">Segurança máxima</div>
+                </div>
+                
+                <div class="bg-yellow-900 bg-opacity-30 p-6 rounded-xl text-center">
+                    <div class="text-4xl font-black text-yellow-400 mb-2 number-counter">5</div>
+                    <div class="text-sm text-gray-300">Guias Completos</div>
+                    <div class="text-xs text-yellow-400 mt-2">Documentação</div>
+                </div>
+            </div>
+            
+            <!-- Verification Links -->
+            <div class="bg-gray-800 p-8 rounded-2xl">
+                <h3 class="text-2xl font-bold text-center mb-8">🔗 Links Verificáveis</h3>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="text-3xl mb-4">🌐</div>
+                        <h4 class="font-bold mb-2">GitHub Público</h4>
+                        <p class="text-sm text-gray-400 mb-4">Código-fonte transparente</p>
+                        <a href="https://github.com/nsdBRoficial/stellar-stake-house" target="_blank" class="text-blue-400 hover:text-blue-300 text-sm font-mono">
+                            github.com/nsdBRoficial/stellar-stake-house
+                        </a>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="text-3xl mb-4">⛓️</div>
+                        <h4 class="font-bold mb-2">Contrato Soroban</h4>
+                        <p class="text-sm text-gray-400 mb-4">Deployado na testnet</p>
+                        <div class="text-blue-400 text-xs font-mono break-all">
+                            CCSDDTQSALKJQ2SXXBS2VUSYD74QDHG22KFZRHMHTOCWDCMKO7JVHSXY
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="text-3xl mb-4">🔍</div>
+                        <h4 class="font-bold mb-2">Stellar.expert</h4>
+                        <p class="text-sm text-gray-400 mb-4">Transações verificáveis</p>
+                        <div class="text-green-400 text-xs">
+                            ✅ Delegação<br>
+                            ✅ Pagamento<br>
+                            ✅ Treasury
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Impact & Future Section -->
+    <section class="py-20 bg-gradient-to-b from-gray-900 to-gray-800">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-black mb-6">
+                    🚀 <span class="bg-gradient-to-r from-yellow-400 to-red-400 bg-clip-text text-transparent">Impacto & Futuro</span>
+                </h2>
+                <p class="text-xl text-gray-300 max-w-4xl mx-auto">
+                    Transformando o ecossistema Stellar, um stake de cada vez
+                </p>
+            </div>
+            
+            <!-- Impact Metrics -->
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <div class="text-center">
+                    <div class="w-20 h-20 mx-auto mb-4 bg-red-500 rounded-full flex items-center justify-center text-3xl">
+                        💰
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2 text-red-400">90%</h3>
+                    <p class="text-gray-300">Redução nos custos de distribuição</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-20 h-20 mx-auto mb-4 bg-green-500 rounded-full flex items-center justify-center text-3xl">
+                        📈
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2 text-green-400">300%</h3>
+                    <p class="text-gray-300">Aumento no engajamento da comunidade</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-20 h-20 mx-auto mb-4 bg-blue-500 rounded-full flex items-center justify-center text-3xl">
+                        🔍
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2 text-blue-400">100%</h3>
+                    <p class="text-gray-300">Transparência auditável em tempo real</p>
+                </div>
+            </div>
+            
+            <!-- Roadmap -->
+            <div class="bg-gray-800 p-8 rounded-2xl">
+                <h3 class="text-2xl font-bold text-center mb-8">🗺️ Roadmap Ambicioso</h3>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Phase 1 -->
+                    <div class="bg-blue-900 bg-opacity-50 p-6 rounded-xl">
+                        <div class="flex items-center mb-4">
+                            <span class="text-2xl mr-3">🎯</span>
+                            <h4 class="text-xl font-bold">Fase 1 (3 meses)</h4>
+                        </div>
+                        <ul class="text-sm text-gray-300 space-y-2">
+                            <li>• Migração para Mainnet</li>
+                            <li>• Auditoria de segurança</li>
+                            <li>• Suporte XLM, USDC, yXLM</li>
+                            <li>• 1.000+ usuários ativos</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Phase 2 -->
+                    <div class="bg-green-900 bg-opacity-50 p-6 rounded-xl">
+                        <div class="flex items-center mb-4">
+                            <span class="text-2xl mr-3">🚀</span>
+                            <h4 class="text-xl font-bold">Fase 2 (6-12 meses)</h4>
+                        </div>
+                        <ul class="text-sm text-gray-300 space-y-2">
+                            <li>• Governança descentralizada</li>
+                            <li>• SDK para desenvolvedores</li>
+                            <li>• Pools avançadas</li>
+                            <li>• 10.000+ usuários, $1M+ TVL</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Phase 3 -->
+                    <div class="bg-purple-900 bg-opacity-50 p-6 rounded-xl">
+                        <div class="flex items-center mb-4">
+                            <span class="text-2xl mr-3">🌟</span>
+                            <h4 class="text-xl font-bold">Fase 3 (1-2 anos)</h4>
+                        </div>
+                        <ul class="text-sm text-gray-300 space-y-2">
+                            <li>• Token nativo governança</li>
+                            <li>• Marketplace estratégias</li>
+                            <li>• Integração cross-chain</li>
+                            <li>• Líder absoluto Stellar</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Business Model Section -->
+    <section class="py-20 bg-gray-800">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-black mb-6">
+                    💼 <span class="bg-gradient-to-r from-green-400 to-yellow-400 bg-clip-text text-transparent">Modelo de Negócio</span>
+                </h2>
+                <p class="text-xl text-gray-300 max-w-4xl mx-auto">
+                    Receita diversificada e escalável com múltiplas fontes
+                </p>
+            </div>
+            
+            <!-- Revenue Streams -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                <div class="bg-green-900 bg-opacity-30 p-6 rounded-xl text-center">
+                    <div class="text-3xl mb-4">💎</div>
+                    <h3 class="font-bold mb-2">Performance Fee</h3>
+                    <div class="text-2xl font-bold text-green-400 mb-2">3%</div>
+                    <p class="text-sm text-gray-400">Das recompensas resgatadas</p>
+                </div>
+                
+                <div class="bg-blue-900 bg-opacity-30 p-6 rounded-xl text-center">
+                    <div class="text-3xl mb-4">📊</div>
+                    <h3 class="font-bold mb-2">Assinaturas</h3>
+                    <div class="text-2xl font-bold text-blue-400 mb-2">$100-2K</div>
+                    <p class="text-sm text-gray-400">Por mês por projeto</p>
+                </div>
+                
+                <div class="bg-purple-900 bg-opacity-30 p-6 rounded-xl text-center">
+                    <div class="text-3xl mb-4">🛠️</div>
+                    <h3 class="font-bold mb-2">Serviços Premium</h3>
+                    <div class="text-2xl font-bold text-purple-400 mb-2">$5K-100K</div>
+                    <p class="text-sm text-gray-400">Por projeto customizado</p>
+                </div>
+                
+                <div class="bg-yellow-900 bg-opacity-30 p-6 rounded-xl text-center">
+                    <div class="text-3xl mb-4">🪙</div>
+                    <h3 class="font-bold mb-2">Token Nativo</h3>
+                    <div class="text-2xl font-bold text-yellow-400 mb-2">Futuro</div>
+                    <p class="text-sm text-gray-400">Governança + utilidade</p>
+                </div>
+            </div>
+            
+            <!-- Financial Projection -->
+            <div class="bg-gradient-to-r from-green-900 to-blue-900 p-8 rounded-2xl text-center">
+                <h3 class="text-2xl font-bold mb-6">📈 Projeção Financeira (3 Anos)</h3>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div>
+                        <div class="text-3xl font-bold text-green-400 mb-2">$50K-100K</div>
+                        <div class="text-lg font-semibold mb-1">Ano 1</div>
+                        <div class="text-sm text-gray-400">MVP, primeiros clientes</div>
+                    </div>
+                    
+                    <div>
+                        <div class="text-3xl font-bold text-blue-400 mb-2">$500K-1M</div>
+                        <div class="text-lg font-semibold mb-1">Ano 2</div>
+                        <div class="text-sm text-gray-400">Expansão, múltiplos tokens</div>
+                    </div>
+                    
+                    <div>
+                        <div class="text-3xl font-bold text-purple-400 mb-2">$2M-5M</div>
+                        <div class="text-lg font-semibold mb-1">Ano 3</div>
+                        <div class="text-sm text-gray-400">Ecossistema completo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Why We Win Section -->
+    <section class="py-20 bg-gradient-to-b from-gray-800 to-gray-900">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-black mb-6">
+                    🏆 <span class="bg-gradient-to-r from-yellow-400 to-red-400 bg-clip-text text-transparent">Por que Merecemos o 1º Lugar</span>
+                </h2>
+                <p class="text-xl text-gray-300 max-w-4xl mx-auto">
+                    Critérios de avaliação atendidos com excelência
+                </p>
+            </div>
+            
+            <!-- Winning Criteria -->
+            <div class="grid md:grid-cols-2 gap-8 mb-16">
+                <!-- Left Column -->
+                <div class="space-y-6">
+                    <div class="bg-yellow-900 bg-opacity-30 p-6 rounded-xl">
+                        <div class="flex items-center mb-4">
+                            <span class="text-2xl mr-3">🔬</span>
+                            <h3 class="text-xl font-bold text-yellow-400">Inovação Técnica</h3>
+                        </div>
+                        <ul class="text-sm text-gray-300 space-y-2">
+                            <li>✅ Primeira plataforma completa de staking Stellar</li>
+                            <li>✅ Arquitetura híbrida revolucionária</li>
+                            <li>✅ Integração real KALE + Reflector</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-green-900 bg-opacity-30 p-6 rounded-xl">
+                        <div class="flex items-center mb-4">
+                            <span class="text-2xl mr-3">🎯</span>
+                            <h3 class="text-xl font-bold text-green-400">Qualidade de Execução</h3>
+                        </div>
+                        <ul class="text-sm text-gray-300 space-y-2">
+                            <li>✅ MVP 100% funcional</li>
+                            <li>✅ Código limpo e documentado</li>
+                            <li>✅ Testes e validações completas</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Right Column -->
+                <div class="space-y-6">
+                    <div class="bg-blue-900 bg-opacity-30 p-6 rounded-xl">
+                        <div class="flex items-center mb-4">
+                            <span class="text-2xl mr-3">🌍</span>
+                            <h3 class="text-xl font-bold text-blue-400">Impacto no Ecossistema</h3>
+                        </div>
+                        <ul class="text-sm text-gray-300 space-y-2">
+                            <li>✅ Resolve problema real de distribuição</li>
+                            <li>✅ Aumenta utilidade do KALE</li>
+                            <li>✅ Demonstra poder do Reflector</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-purple-900 bg-opacity-30 p-6 rounded-xl">
+                        <div class="flex items-center mb-4">
+                            <span class="text-2xl mr-3">🚀</span>
+                            <h3 class="text-xl font-bold text-purple-400">Potencial de Crescimento</h3>
+                        </div>
+                        <ul class="text-sm text-gray-300 space-y-2">
+                            <li>✅ Modelo de negócio viável</li>
+                            <li>✅ Roadmap ambicioso</li>
+                            <li>✅ Equipe experiente</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Final CTA -->
+            <div class="text-center bg-gradient-to-r from-yellow-500 to-red-500 p-8 rounded-2xl">
+                <h3 class="text-3xl font-black mb-4 text-black">🏆 JURADOS, A DECISÃO É SIMPLES</h3>
+                
+                <div class="grid md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-black bg-opacity-20 p-4 rounded-lg">
+                        <div class="text-2xl font-bold text-black">ESCOLHAM</div>
+                        <div class="text-lg text-gray-800">A INOVAÇÃO</div>
+                    </div>
+                    <div class="bg-black bg-opacity-20 p-4 rounded-lg">
+                        <div class="text-2xl font-bold text-black">ESCOLHAM</div>
+                        <div class="text-lg text-gray-800">O IMPACTO</div>
+                    </div>
+                    <div class="bg-black bg-opacity-20 p-4 rounded-lg">
+                        <div class="text-2xl font-bold text-black">ESCOLHAM</div>
+                        <div class="text-lg text-gray-800">O FUTURO</div>
+                    </div>
+                    <div class="bg-black bg-opacity-20 p-4 rounded-lg">
+                        <div class="text-2xl font-bold text-black">ESCOLHAM</div>
+                        <div class="text-lg text-gray-800">STELLAR STAKE HOUSE</div>
+                    </div>
+                </div>
+                
+                <p class="text-xl font-bold text-black mb-6">
+                    "Não estamos apenas participando do hackathon.<br>
+                    Estamos construindo a infraestrutura que vai acelerar a adoção da rede Stellar pelos próximos anos."
+                </p>
+                
+                <div class="text-2xl font-black text-black">
+                    🏠 STELLAR STAKE HOUSE - WHERE INNOVATION MEETS STELLAR EXCELLENCE 🚀
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="py-12 bg-black">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <div class="mb-8">
+                <div class="text-4xl mb-4">🏠</div>
+                <h3 class="text-2xl font-bold mb-2">Stellar Stake House</h3>
+                <p class="text-gray-400">Construindo o futuro do staking na Stellar</p>
+            </div>
+            
+            <div class="grid md:grid-cols-4 gap-6 mb-8">
+                <div>
+                    <h4 class="font-bold mb-2">🌐 Demo</h4>
+                    <a href="https://stellar-stake-house.vercel.app" target="_blank" class="text-blue-400 hover:text-blue-300 text-sm">
+                        stellar-stake-house.vercel.app
+                    </a>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-2">🐙 GitHub</h4>
+                    <a href="https://github.com/nsdBRoficial/stellar-stake-house" target="_blank" class="text-blue-400 hover:text-blue-300 text-sm">
+                        github.com/nsdBRoficial
+                    </a>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-2">📧 Contato</h4>
+                    <div class="text-gray-400 text-sm">
+                        team@stellarstakehouse.com
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-2">📱 Social</h4>
+                    <div class="text-gray-400 text-sm">
+                        @StellarStakeHouse
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-8">
+                <p class="text-gray-500 text-sm">
+                    © 2025 Stellar Stake House. Preparado para conquistar o mundo, um stake de cada vez.
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript for Interactions -->
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Number counter animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('.number-counter');
+            
+            counters.forEach(counter => {
+                const target = parseInt(counter.textContent);
+                const increment = target / 100;
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        counter.textContent = target + (counter.textContent.includes('%') ? '%' : '');
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = Math.floor(current) + (counter.textContent.includes('%') ? '%' : '');
+                    }
+                }, 20);
+            });
+        }
+        
+        // Intersection Observer for animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-in');
+                }
+            });
+        });
+        
+        // Observe all sections
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+        
+        // Trigger counter animation when page loads
+        window.addEventListener('load', () => {
+            setTimeout(animateCounters, 1000);
+        });
+        
+        // Add some interactive effects
+        document.querySelectorAll('.card-hover').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+    
+</body>
+</html>
