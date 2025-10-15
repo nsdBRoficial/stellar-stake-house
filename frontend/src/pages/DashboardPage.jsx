@@ -15,6 +15,7 @@ import {
   Shield,
   Zap,
   RefreshCw,
+  Loader2,
   ExternalLink,
   Database,
   CheckCircle,
@@ -27,14 +28,16 @@ import {
   Target
 } from 'lucide-react'
 import axios from 'axios'
+import { fetchAccount, fetchRecentPayments, parseBalances, mapPaymentsToTransactions, getNetwork } from '../services/stellarHorizon.js'
 import StakingModal from '../components/StakingModal'
 import RewardsModal from '../components/RewardsModal'
 import CreatePoolModal from '../components/CreatePoolModal'
 import PoolAnalytics from '../components/PoolAnalytics'
 
 const DashboardPage = () => {
-  const { user } = useMultiAuth()
+  const { user, authenticateWith } = useMultiAuth()
   const { t } = useLanguage()
+  // UI simplificada: sem tela de carregamento; avançar direto ao dashboard
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [showStakingModal, setShowStakingModal] = useState(false)
@@ -44,6 +47,8 @@ const DashboardPage = () => {
   const [showCreatePoolModal, setShowCreatePoolModal] = useState(false)
   const [selectedPoolForAnalytics, setSelectedPoolForAnalytics] = useState(null)
   const [showAnalytics, setShowAnalytics] = useState(false)
+  const [connectingAlbedo, setConnectingAlbedo] = useState(false)
+  const [albedoError, setAlbedoError] = useState(null)
   const [dashboardData, setDashboardData] = useState({
     tokens: {
       KALE: {
@@ -84,32 +89,40 @@ const DashboardPage = () => {
   const fetchDashboardData = async () => {
     try {
       setLoading(true)
-      
-      // Obter saldo de KALE
-      const balanceResponse = await axios.get(`/api/staking/balance/${user.publicKey}`)
-       
-       // Obter informações de staking
-       const stakingResponse = await axios.get(`/api/staking/status/${user.publicKey}`)
-       
-       // Obter recompensas pendentes
-       const rewardsResponse = await axios.get(`/api/rewards/pending/${user.publicKey}`)
-       
-       // Obter transações recentes
-       const historyResponse = await axios.get(`/api/history/${user.publicKey}?limit=5`)
-      
-      setDashboardData({
-        kaleBalance: parseFloat(balanceResponse.data.balance || 0),
-        stakedAmount: parseFloat(stakingResponse.data.total_delegated || 0),
-        pendingRewards: parseFloat(rewardsResponse.data.pending_rewards || 0),
-        totalRewardsEarned: parseFloat(rewardsResponse.data.total_earned || 0),
-        kalePrice: parseFloat(rewardsResponse.data.token_price_brl || 0),
-        rewardRate: parseFloat(stakingResponse.data.current_apy || 0),
-        estimatedDailyReward: calculateDailyReward(
-          parseFloat(stakingResponse.data.total_delegated || 0),
-          parseFloat(stakingResponse.data.current_apy || 0)
-        ),
-        recentTransactions: historyResponse.data.transactions || []
-      })
+      if (!user?.publicKey) return
+
+      // Buscar dados da conta no Horizon
+      const account = await fetchAccount(user.publicKey)
+      const { xlm, assets } = parseBalances(account)
+
+      // Pagamentos recentes via Horizon
+      let payments = []
+      try {
+        const recent = await fetchRecentPayments(user.publicKey, 10)
+        payments = mapPaymentsToTransactions(recent)
+      } catch (e) {
+        console.warn('Falha ao buscar pagamentos Horizon:', e?.message)
+      }
+
+      // Atualizar estado com saldos e transações
+      setDashboardData(prev => ({
+        ...prev,
+        tokens: {
+          ...prev.tokens,
+          XLM: {
+            ...prev.tokens.XLM,
+            walletBalance: xlm
+          },
+          KALE: {
+            ...prev.tokens.KALE,
+            walletBalance: (() => {
+              const kale = assets.find(a => a.code === 'KALE')
+              return kale ? kale.balance : prev.tokens.KALE.walletBalance
+            })()
+          }
+        },
+        recentTransactions: payments
+      }))
     } catch (error) {
       console.error('Erro ao carregar dados do dashboard:', error)
       // Em caso de erro, usar dados mock se disponível
@@ -300,17 +313,22 @@ const DashboardPage = () => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-500 mx-auto mb-4"></div>
-          <p className="text-white text-lg">{t('dashboard.loadingDashboard')}</p>
-        </div>
-      </div>
-    )
+  const handleConnectAlbedo = async () => {
+    try {
+      setAlbedoError(null)
+      setConnectingAlbedo(true)
+      await authenticateWith('albedo')
+    } catch (err) {
+      console.error('[ALBEDO CONNECT] Erro ao conectar:', err)
+      setAlbedoError(err?.message || 'Falha ao conectar Albedo')
+    } finally {
+      setConnectingAlbedo(false)
+    }
   }
 
+  // Removido o estado de carregamento visual para avançar direto
+
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -328,17 +346,40 @@ const DashboardPage = () => {
             </p>
           </div>
           
-          <button
-            onClick={handleRefresh}
-            disabled={refreshing}
-            className="flex items-center space-x-2 px-4 py-2 bg-white/10 hover:bg-white/20 disabled:opacity-50 rounded-xl transition-all duration-200 border border-white/20"
-          >
-            <RefreshCw className={`h-4 w-4 text-white ${refreshing ? 'animate-spin' : ''}`} />
-            <span className="text-white text-sm font-medium">
-              {refreshing ? t('dashboard.updating') : t('dashboard.update')}
-            </span>
-          </button>
-        </div>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={handleRefresh}
+              disabled={refreshing}
+              className="flex items-center space-x-2 px-4 py-2 bg-white/10 hover:bg-white/20 disabled:opacity-50 rounded-xl transition-all duration-200 border border-white/20"
+            >
+              <RefreshCw className={`h-4 w-4 text-white ${refreshing ? 'animate-spin' : ''}`} />
+              <span className="text-white text-sm font-medium">
+                {refreshing ? t('dashboard.updating') : t('dashboard.update')}
+              </span>
+            </button>
+
+            <button
+              onClick={handleConnectAlbedo}
+              disabled={connectingAlbedo}
+              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-xl transition-all duration-200 border border-blue-500/50"
+            >
+              {connectingAlbedo ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Wallet className="h-4 w-4" />
+              )}
+              <span className="text-sm font-medium">
+                {user?.strategy === 'albedo' ? 'Albedo conectado' : 'Wallet Connect (Albedo)'}
+              </span>
+            </button>
+          </div>
+       </div>
+
+        {albedoError && (
+          <div className="mb-4">
+            <p className="text-red-300 text-sm">{albedoError}</p>
+          </div>
+        )}
 
         {/* Navigation Tabs */}
         <div className="mb-8">
@@ -385,16 +426,14 @@ const DashboardPage = () => {
           </h2>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {Object.entries(dashboardData.tokens).map(([tokenSymbol, tokenData]) => (
+            {Object.entries(dashboardData.tokens)
+              .filter(([tokenSymbol]) => tokenSymbol !== 'KALE')
+              .map(([tokenSymbol, tokenData]) => (
               <div key={tokenSymbol} className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
                 {/* Token Header */}
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center space-x-3">
-                    <div className={`p-3 rounded-xl ${
-                      tokenSymbol === 'KALE' 
-                        ? 'bg-gradient-to-r from-green-500 to-emerald-600'
-                        : 'bg-gradient-to-r from-blue-500 to-cyan-600'
-                    }`}>
+                    <div className={`p-3 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-600`}>
                       <span className="text-white font-bold text-lg">{tokenSymbol}</span>
                     </div>
                     <div>
@@ -504,10 +543,10 @@ const DashboardPage = () => {
               <p className="text-blue-200 text-sm leading-relaxed mb-3">
                 <strong>{t('dashboard.howMarketplaceWorks')}</strong> {t('dashboard.marketplaceDescription')}
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div className="bg-green-500/10 rounded-lg p-3 border border-green-500/20">
                   <h4 className="text-green-200 font-semibold text-sm mb-1">{t('dashboard.forUsers')}</h4>
-                  <p className="text-green-300 text-xs">{t('dashboard.delegateKaleXlm')}</p>
+                  <p className="text-green-300 text-xs">Delegue seus tokens para pools e receba recompensas.</p>
                 </div>
                 <div className="bg-purple-500/10 rounded-lg p-3 border border-purple-500/20">
                   <h4 className="text-purple-200 font-semibold text-sm mb-1">{t('dashboard.forProjects')}</h4>
@@ -518,73 +557,7 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        {/* Reflector Oracle Section */}
-        <div className="mb-8">
-          <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-sm rounded-2xl p-6 border border-blue-500/30">
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex items-center space-x-3">
-                <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-3 rounded-xl">
-                  <Database className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold text-white">{t('dashboard.reflectorIntegration')}</h2>
-                  <p className="text-blue-200 text-sm">{t('dashboard.decentralizedOracle')}</p>
-                </div>
-              </div>
-              <div className="flex space-x-2">
-                <a
-                  href="https://reflector.network/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-1 px-3 py-2 bg-blue-600/50 hover:bg-blue-600/70 rounded-lg transition-colors"
-                >
-                  <span className="text-blue-100 text-sm">{t('dashboard.website')}</span>
-                  <ExternalLink className="h-4 w-4 text-blue-100" />
-                </a>
-                <a
-                  href="https://reflector.network/docs"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-1 px-3 py-2 bg-purple-600/50 hover:bg-purple-600/70 rounded-lg transition-colors"
-                >
-                  <span className="text-purple-100 text-sm">{t('dashboard.documentation')}</span>
-                  <ExternalLink className="h-4 w-4 text-purple-100" />
-                </a>
-                <a
-                  href="https://discord.gg/reflector"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-1 px-3 py-2 bg-indigo-600/50 hover:bg-indigo-600/70 rounded-lg transition-colors"
-                >
-                  <span className="text-indigo-100 text-sm">{t('dashboard.discord')}</span>
-                  <ExternalLink className="h-4 w-4 text-indigo-100" />
-                </a>
-              </div>
-            </div>
-            <div className="space-y-3">
-              <p className="text-blue-200 text-sm leading-relaxed">
-                <strong>Reflector Oracle</strong> {t('dashboard.reflectorDescription')}
-              </p>
-              <p className="text-blue-200 text-sm leading-relaxed">
-                <strong>{t('dashboard.importanceForPlatform')}</strong> {t('dashboard.platformImportance')}
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                <div className="bg-blue-500/10 rounded-lg p-3 border border-blue-500/20">
-                  <h4 className="text-blue-200 font-semibold text-sm mb-1">{t('dashboard.pushBased')}</h4>
-                  <p className="text-blue-300 text-xs">{t('dashboard.pushBasedDesc')}</p>
-                </div>
-                <div className="bg-purple-500/10 rounded-lg p-3 border border-purple-500/20">
-                  <h4 className="text-purple-200 font-semibold text-sm mb-1">{t('dashboard.daoGovernance')}</h4>
-                  <p className="text-purple-300 text-xs">{t('dashboard.daoGovernanceDesc')}</p>
-                </div>
-                <div className="bg-indigo-500/10 rounded-lg p-3 border border-indigo-500/20">
-                  <h4 className="text-indigo-200 font-semibold text-sm mb-1">{t('dashboard.stellarNative')}</h4>
-                  <p className="text-indigo-300 text-xs">{t('dashboard.stellarNativeDesc')}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Reflector Oracle Section removida para simplificação */}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Informações de Staking */}
@@ -602,7 +575,7 @@ const DashboardPage = () => {
                     <span className="text-white font-semibold">{formatNumber(dashboardData.rewardRate, 1)}%</span>
                   </div>
                   <div className="flex justify-between items-center py-3 border-b border-white/10">
-                    <span className="text-gray-400">Preço Atual do KALE</span>
+                    <span className="text-gray-400">Preço Atual do Token</span>
                     <span className="text-white font-semibold">{formatCurrency(dashboardData.kalePrice)}</span>
                   </div>
                   <div className="flex justify-between items-center py-3 border-b border-white/10">
@@ -614,15 +587,28 @@ const DashboardPage = () => {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center py-3 border-b border-white/10">
                     <span className="text-gray-400">Recompensa Estimada Diária</span>
-                    <span className="text-green-400 font-semibold">{formatNumber(dashboardData.estimatedDailyReward)} KALE</span>
+                    <span className="text-green-400 font-semibold">{formatNumber(dashboardData.estimatedDailyReward)}</span>
                   </div>
                   <div className="flex justify-between items-center py-3 border-b border-white/10">
                     <span className="text-gray-400">Total de Recompensas</span>
-                    <span className="text-green-400 font-semibold">{formatNumber(dashboardData.totalRewardsEarned)} KALE</span>
+                    <span className="text-green-400 font-semibold">{formatNumber(dashboardData.totalRewardsEarned)}</span>
                   </div>
                   <div className="flex justify-between items-center py-3 border-b border-white/10">
                     <span className="text-gray-400">Endereço da Carteira</span>
-                    <span className="text-white font-semibold">{formatAddress(user?.publicKey)}</span>
+                    <div className="flex items-center space-x-3">
+                      <span className="text-white font-semibold break-all">{user?.publicKey}</span>
+                      <button
+                        onClick={() => navigator.clipboard?.writeText(user?.publicKey || '')}
+                        className="px-2 py-1 text-xs bg-white/10 border border-white/20 rounded hover:bg-white/20"
+                        title="Copiar endereço"
+                      >
+                        Copiar
+                      </button>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center py-3 border-b border-white/10">
+                    <span className="text-gray-400">Rede</span>
+                    <span className="text-white font-semibold">{getNetwork() === 'public' ? 'public' : 'testnet'}</span>
                   </div>
                 </div>
               </div>
@@ -820,10 +806,10 @@ const DashboardPage = () => {
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center space-x-3">
                           <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-3 rounded-xl">
-                            <span className="text-white font-bold">KALE</span>
+                            <span className="text-white font-bold">TOKEN</span>
                           </div>
                           <div>
-                            <h4 className="text-white font-semibold">Pool KALE #1</h4>
+                            <h4 className="text-white font-semibold">Pool #1</h4>
                             <p className="text-gray-400 text-sm">Criada há 5 dias</p>
                           </div>
                         </div>
@@ -870,8 +856,8 @@ const DashboardPage = () => {
                           onClick={() => {
                             setSelectedPoolForAnalytics({
                               id: 1,
-                              poolName: 'Pool KALE #1',
-                              tokenSymbol: 'KALE',
+                              poolName: 'Pool #1',
+                              tokenSymbol: 'TOKEN',
                               totalRewards: 10000,
                               maxAPY: 15.0,
                               distributionDays: 30

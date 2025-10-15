@@ -1,17 +1,13 @@
 import { createContext, useState, useEffect } from 'react'
 import axios from 'axios'
 import { AuthStrategyManager } from '../services/auth/AuthStrategy.js'
-import { FreighterStrategy } from '../services/auth/FreighterStrategy.js'
-import { AlbedoStrategy } from '../services/auth/AlbedoStrategy.js'
-import { PasskeyStrategy } from '../services/auth/PasskeyStrategy.js'
 import { TestStrategy } from '../services/auth/TestStrategy.js'
+import { AlbedoStrategy } from '../services/auth/AlbedoStrategy.js'
 import mockApiService from '../services/mockApi.js'
+import getSupabaseClient from '../services/supabaseClient.js'
 
 const MultiAuthContext = createContext()
 
-/**
- * Provedor de contexto para autenticação multi-modal
- */
 function MultiAuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -19,107 +15,125 @@ function MultiAuthProvider({ children }) {
   const [error, setError] = useState(null)
   const [availableStrategies, setAvailableStrategies] = useState([])
   const [currentStrategy, setCurrentStrategy] = useState(null)
-  
+  const supabase = getSupabaseClient()
+
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002'
-  
-  // Inicializar gerenciador de estratégias
+
   const [strategyManager] = useState(() => {
     const manager = new AuthStrategyManager()
-    
-    // Registrar todas as estratégias disponíveis
-    manager.registerStrategy(new FreighterStrategy())
-    manager.registerStrategy(new AlbedoStrategy())
-    manager.registerStrategy(new PasskeyStrategy())
     manager.registerStrategy(new TestStrategy())
-    
+    manager.registerStrategy(new AlbedoStrategy())
     return manager
   })
 
-  /**
-   * Carrega estratégias disponíveis
-   */
   const loadAvailableStrategies = async () => {
     try {
-      console.log('[MULTI-AUTH] Carregando estratégias disponíveis...')
       const strategies = await strategyManager.getAvailableStrategies()
       setAvailableStrategies(strategies)
-      console.log('[MULTI-AUTH] Estratégias disponíveis:', strategies.map(s => s.name))
     } catch (error) {
       console.error('[MULTI-AUTH] Erro ao carregar estratégias:', error)
     }
   }
 
-  /**
-   * Autentica usando uma estratégia específica
-   * @param {string} strategyName - Nome da estratégia
-   * @param {object} options - Opções específicas da estratégia
-   */
-  const authenticateWith = async (strategyName, options = {}) => {
+  const loginWithEmailPassword = async (email, password) => {
     try {
-      console.log(`[MULTI-AUTH] Iniciando autenticação com ${strategyName}...`)
+      setIsLoading(true)
+      setError(null)
+
+      if (!email || !password) {
+        throw new Error('Informe e-mail e senha.')
+      }
+
+      const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password })
+      if (authError) throw authError
+
+      const sessionUser = data.user
+      const userData = {
+        id: sessionUser?.id,
+        email: sessionUser?.email,
+        provider: 'email',
+        strategy: 'web2-email',
+      }
+
+      setUser(userData)
+      setIsAuthenticated(true)
+      setCurrentStrategy(null)
+      saveAuthData(userData, 'web2-email')
+      return userData
+    } catch (err) {
+      console.error('[MULTI-AUTH] Erro no login email/senha:', err)
+      setError(err.message)
+      throw err
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const loginWithGoogle = async () => {
+    try {
+      setIsLoading(true)
+      setError(null)
+
+      const { data, error: authError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`
+        }
+      })
+      if (authError) throw authError
+
+      return data
+    } catch (err) {
+      console.error('[MULTI-AUTH] Erro no login Google:', err)
+      setError(err.message)
+      throw err
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const signUpWithGoogle = async () => {
+    return loginWithGoogle()
+  }
+
+  const authenticateWith = async (strategyName) => {
+    try {
       setIsLoading(true)
       setError(null)
 
       const strategy = strategyManager.getStrategy(strategyName)
-      if (!strategy) {
-        throw new Error(`Estratégia '${strategyName}' não encontrada`)
-      }
+      if (!strategy) throw new Error(`Estratégia '${strategyName}' não encontrada`)
 
-      // Verificar se a estratégia está disponível
       const isAvailable = await strategy.isAvailable()
-      if (!isAvailable) {
-        throw new Error(`${strategy.displayName} não está disponível no momento`)
-      }
+      if (!isAvailable) throw new Error(`${strategy.displayName} não está disponível no momento`)
 
-      // Realizar autenticação
-      let authResult
-      if (strategyName === 'passkey' && options.email) {
-        authResult = await strategy.authenticate(options.email)
-      } else {
-        authResult = await strategy.authenticate()
-      }
+      const authResult = await strategy.authenticate()
 
-      // Validar resultado
-      if (!authResult.publicKey) {
-        throw new Error('Resultado de autenticação inválido')
-      }
-
-      // Configurar modo de teste se necessário
-      if (strategyName === 'test') {
-        mockApiService.enableTestMode(strategy)
-        console.log('[MULTI-AUTH] Modo de teste ativado')
-      } else {
-        mockApiService.disableTestMode()
-      }
-      
-      // Autenticar no backend (ou simular se for teste)
-      let backendResult
-      if (strategyName === 'test') {
-        console.log('[MULTI-AUTH] Usando autenticação mock para modo de teste')
-        backendResult = await mockApiService.mockAuthVerify(authResult)
-      } else {
-        console.log('[MULTI-AUTH] Usando autenticação real do backend')
+      // Tentar autenticação no backend (simpleAuth para teste)
+      let backendResult = { user: {}, session: null }
+      try {
         backendResult = await authenticateWithBackend(authResult, strategyName)
+      } catch (e) {
+        console.warn('[MULTI-AUTH] Backend verify falhou, seguindo com dados locais:', e?.message)
+        // Fallback mock apenas para test
+        if (strategyName === 'test') {
+          backendResult = await mockApiService.mockAuthVerify(authResult)
+        }
       }
-      
-      // Configurar estado da aplicação
+
       const userData = {
         ...authResult,
         ...backendResult.user,
-        strategy: strategyName
+        strategy: strategyName,
+        ...(backendResult.session ? { sessionId: backendResult.session.id } : {})
       }
-      
+
       setUser(userData)
       setIsAuthenticated(true)
       setCurrentStrategy(strategy)
       strategyManager.setCurrentStrategy(strategyName)
-      
-      // Salvar preferência e dados de sessão
       saveAuthData(userData, strategyName)
-      
-      console.log(`[MULTI-AUTH] Autenticação com ${strategyName} bem-sucedida`)
       return userData
-      
     } catch (error) {
       console.error(`[MULTI-AUTH] Erro na autenticação com ${strategyName}:`, error)
       setError(error.message)
@@ -129,87 +143,45 @@ function MultiAuthProvider({ children }) {
     }
   }
 
-  /**
-   * Tenta autenticação com fallback automático
-   * @param {string} preferredStrategy - Estratégia preferida
-   * @param {object} options - Opções de autenticação
-   */
-  const authenticateWithFallback = async (preferredStrategy, options = {}) => {
+  const authenticateWithFallback = async (preferredStrategy) => {
     const strategies = availableStrategies.map(s => s.name)
-    
-    // Colocar estratégia preferida no início
     if (preferredStrategy && strategies.includes(preferredStrategy)) {
       const index = strategies.indexOf(preferredStrategy)
       strategies.splice(index, 1)
       strategies.unshift(preferredStrategy)
     }
-    
-    console.log(`[MULTI-AUTH] Tentando autenticação com fallback. Ordem:`, strategies)
-    
     let lastError = null
-    
     for (const strategyName of strategies) {
       try {
-        console.log(`[MULTI-AUTH] Tentando estratégia: ${strategyName}`)
-        const result = await authenticateWith(strategyName, options)
-        console.log(`[MULTI-AUTH] Sucesso com estratégia: ${strategyName}`)
+        const result = await authenticateWith(strategyName)
         return result
       } catch (error) {
-        console.log(`[MULTI-AUTH] Falha com ${strategyName}:`, error.message)
         lastError = error
-        
-        // Se o usuário cancelou, não tentar outras estratégias
-        if (error.message.includes('cancelada') || 
-            error.message.includes('rejected') ||
-            error.message.includes('denied')) {
-          console.log(`[MULTI-AUTH] Usuário cancelou, parando fallback`)
+        if (error.message.includes('cancelada') || error.message.includes('rejected') || error.message.includes('denied')) {
           break
         }
-        
-        // Aguardar um pouco antes da próxima tentativa
         await new Promise(resolve => setTimeout(resolve, 1000))
       }
     }
-    
-    console.error(`[MULTI-AUTH] Todas as estratégias falharam`)
     throw lastError || new Error('Nenhuma estratégia de autenticação funcionou')
   }
 
-  /**
-   * Autentica no backend
-   * @param {object} authResult - Resultado da autenticação da estratégia
-   * @param {string} strategyName - Nome da estratégia utilizada
-   */
   const authenticateWithBackend = async (authResult, strategyName) => {
-    try {
-      console.log('[MULTI-AUTH] Autenticando no backend...')
-      
-      const response = await axios.post(`${API_URL}/api/auth/verify`, {
-        publicKey: authResult.publicKey,
-        message: `Autenticação Stellar Stake House - ${Date.now()}`,
-        provider: strategyName,
-        metadata: authResult.metadata,
-        simpleAuth: true
-      })
-
-      if (!response.data.success) {
-        throw new Error(response.data.message || 'Falha na autenticação do backend')
-      }
-
-      console.log('[MULTI-AUTH] Autenticação no backend bem-sucedida')
-      return response.data
-      
-    } catch (error) {
-      console.error('[MULTI-AUTH] Erro na autenticação do backend:', error)
-      throw new Error(error.response?.data?.message || error.message || 'Erro na autenticação do backend')
+    const message = `Autenticação Stellar Stake House - ${Date.now()}`
+    const payload = {
+      publicKey: authResult.publicKey,
+      message,
+      provider: strategyName,
+      metadata: authResult.metadata,
+      simpleAuth: true
     }
+    const { data } = await axios.post(`${API_URL}/api/auth/verify`, payload)
+    if (!data?.success) {
+      throw new Error(data?.error || 'Falha na autenticação do backend')
+    }
+    return data
   }
 
-  /**
-   * Salva dados de autenticação
-   * @param {object} userData - Dados do usuário
-   * @param {string} strategyName - Nome da estratégia
-   */
   const saveAuthData = (userData, strategyName) => {
     try {
       const authData = {
@@ -217,169 +189,84 @@ function MultiAuthProvider({ children }) {
         strategy: strategyName,
         timestamp: Date.now(),
         provider: strategyName,
-        ...(userData.metadata?.email && { email: userData.metadata.email })
+        ...(userData.email && { email: userData.email }),
+        ...(userData.sessionId && { sessionId: userData.sessionId })
       }
-      
       localStorage.setItem('stellar_auth', JSON.stringify(authData))
       localStorage.setItem('preferred_auth_strategy', strategyName)
-      
-      console.log('[MULTI-AUTH] Dados de autenticação salvos')
     } catch (error) {
       console.error('[MULTI-AUTH] Erro ao salvar dados de autenticação:', error)
     }
   }
 
-  /**
-   * Desconecta o usuário
-   */
   const disconnect = async () => {
     try {
-      console.log('[MULTI-AUTH] Desconectando usuário...')
-      
-      // Desconectar da estratégia atual
       if (currentStrategy) {
         await currentStrategy.disconnect()
       }
-      
-      // Desativar modo de teste se estiver ativo
-      if (mockApiService.isInTestMode()) {
-        mockApiService.disableTestMode()
-        console.log('[MULTI-AUTH] Modo de teste desativado')
+      try {
+        await supabase.auth.signOut()
+      } catch (e) {
+        console.warn('[MULTI-AUTH] Falha ao encerrar sessão Supabase:', e?.message)
       }
-      
-      // Limpar estado da aplicação
       setUser(null)
       setIsAuthenticated(false)
-      setCurrentStrategy(null)
       setError(null)
-      strategyManager.setCurrentStrategy(null)
-      
-      // Limpar dados salvos
+      setCurrentStrategy(null)
       localStorage.removeItem('stellar_auth')
       localStorage.removeItem('preferred_auth_strategy')
-      
-      console.log('[MULTI-AUTH] Desconexão concluída')
     } catch (error) {
-      console.error('[MULTI-AUTH] Erro na desconexão:', error)
+      console.error('[MULTI-AUTH] Erro ao desconectar:', error)
     }
   }
 
-  /**
-   * Verifica autenticação salva
-   */
-  const checkSavedAuth = async () => {
-    try {
-      console.log('[MULTI-AUTH] Verificando autenticação salva...')
-      
-      const savedAuth = localStorage.getItem('stellar_auth')
-      if (!savedAuth) {
-        console.log('[MULTI-AUTH] Nenhuma autenticação salva encontrada')
-        return
-      }
-
-      const authData = JSON.parse(savedAuth)
-      
-      // Verificar se não expirou (24 horas)
-      const isExpired = Date.now() - authData.timestamp > 24 * 60 * 60 * 1000
-      if (isExpired) {
-        console.log('[MULTI-AUTH] Autenticação salva expirou')
-        localStorage.removeItem('stellar_auth')
-        return
-      }
-
-      // Verificar se a estratégia ainda está disponível
-      const strategy = strategyManager.getStrategy(authData.strategy)
-      if (!strategy) {
-        console.log('[MULTI-AUTH] Estratégia salva não está mais disponível')
-        localStorage.removeItem('stellar_auth')
-        return
-      }
-
-      // Verificar sessão na estratégia
-      const sessionData = await strategy.checkSession()
-      if (sessionData && sessionData.publicKey === authData.publicKey) {
-        console.log('[MULTI-AUTH] Restaurando sessão salva')
-        
-        const userData = {
-          publicKey: authData.publicKey,
-          address: authData.publicKey,
-          strategy: authData.strategy,
-          ...(authData.email && { email: authData.email })
-        }
-        
-        setUser(userData)
-        setIsAuthenticated(true)
-        setCurrentStrategy(strategy)
-        strategyManager.setCurrentStrategy(authData.strategy)
-      } else {
-        console.log('[MULTI-AUTH] Sessão salva não é mais válida')
-        localStorage.removeItem('stellar_auth')
-      }
-      
-    } catch (error) {
-      console.error('[MULTI-AUTH] Erro ao verificar autenticação salva:', error)
-      localStorage.removeItem('stellar_auth')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  /**
-   * Obtém a estratégia preferida do usuário
-   */
   const getPreferredStrategy = () => {
-    return localStorage.getItem('preferred_auth_strategy')
+    try {
+      return localStorage.getItem('preferred_auth_strategy') || null
+    } catch {
+      return null
+    }
   }
 
-  /**
-   * Assina uma transação usando a estratégia atual
-   * @param {string} transaction - Transação XDR
-   * @param {object} options - Opções de assinatura
-   */
-  const signTransaction = async (transaction, options = {}) => {
-    if (!currentStrategy) {
-      throw new Error('Nenhuma estratégia de autenticação ativa')
-    }
-
-    if (typeof currentStrategy.signTransaction !== 'function') {
-      throw new Error('Estratégia atual não suporta assinatura de transações')
-    }
-
-    return await currentStrategy.signTransaction(transaction, options)
-  }
-
-  // Carregar estratégias disponíveis na inicialização
   useEffect(() => {
-    const initialize = async () => {
-      await loadAvailableStrategies()
-      await checkSavedAuth()
-    }
-    
-    initialize()
+    (async () => {
+      try {
+        const { data } = await supabase.auth.getSession()
+        const sessionUser = data?.session?.user
+        if (sessionUser) {
+          const userData = {
+            id: sessionUser.id,
+            email: sessionUser.email,
+            provider: (sessionUser.app_metadata?.provider) || 'email',
+            strategy: sessionUser.app_metadata?.provider === 'google' ? 'web2-google' : 'web2-email'
+          }
+          setUser(userData)
+          setIsAuthenticated(true)
+          saveAuthData(userData, userData.strategy)
+        }
+      } catch (e) {
+        console.warn('[MULTI-AUTH] Sem sessão Supabase ativa:', e?.message)
+      } finally {
+        setIsLoading(false)
+      }
+    })()
+    loadAvailableStrategies()
   }, [])
 
   const value = {
-    // Estado
     user,
     isAuthenticated,
     isLoading,
     error,
-    availableStrategies,
-    currentStrategy,
-    
-    // Métodos
     authenticateWith,
     authenticateWithFallback,
-    disconnect,
-    signTransaction,
     getPreferredStrategy,
-    loadAvailableStrategies,
-    
-    // Modo de teste
-    isTestMode: () => mockApiService.isInTestMode(),
-    
-    // Gerenciador de estratégias (para uso avançado)
-    strategyManager
+    availableStrategies,
+    currentStrategy,
+    disconnect,
+    loginWithEmailPassword,
+    loginWithGoogle,
+    signUpWithGoogle
   }
 
   return (

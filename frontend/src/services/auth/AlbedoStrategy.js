@@ -1,4 +1,5 @@
 import { AuthStrategy } from './AuthStrategy.js'
+import albedo from '@albedo-link/intent'
 
 /**
  * Estratégia de autenticação para Albedo Wallet
@@ -6,7 +7,7 @@ import { AuthStrategy } from './AuthStrategy.js'
 export class AlbedoStrategy extends AuthStrategy {
   constructor() {
     super('albedo', 'Albedo Wallet', '🌟')
-    this.albedo = null
+    this.albedo = albedo || null
   }
 
   /**
@@ -28,9 +29,9 @@ export class AlbedoStrategy extends AuthStrategy {
         return this.albedo
       }
 
-      // Carregar Albedo SDK dinamicamente
+      // Carregar Albedo SDK dinamicamente (fallback caso o import falhe)
       const script = document.createElement('script')
-      script.src = 'https://cdn.jsdelivr.net/npm/@albedo-link/intent@0.12.1/lib/albedo.min.js'
+      script.src = 'https://unpkg.com/@albedo-link/intent@0.13.0/lib/albedo.intent.js'
       script.async = true
       script.crossOrigin = 'anonymous'
       
@@ -82,15 +83,12 @@ export class AlbedoStrategy extends AuthStrategy {
    * @returns {Promise<boolean>}
    */
   async isAvailable() {
-    try {
-      console.log('[ALBEDO] Verificando disponibilidade...')
-      await this.loadAlbedoSDK()
-      console.log('[ALBEDO] Disponível')
-      return true
-    } catch (error) {
-      console.log('[ALBEDO] Não disponível:', error.message)
-      return false
+    // Retornar rapidamente para não perder o gesto do usuário no clique
+    const available = typeof window !== 'undefined'
+    if (!available) {
+      console.log('[ALBEDO] Ambiente não é browser')
     }
+    return available
   }
 
   /**
@@ -100,42 +98,93 @@ export class AlbedoStrategy extends AuthStrategy {
   async authenticate() {
     try {
       console.log('[ALBEDO] Iniciando processo de autenticação...')
-      
-      const albedo = await this.loadAlbedoSDK()
-      
-      if (!albedo || typeof albedo.publicKey !== 'function') {
-        throw new Error('SDK do Albedo não está funcionando corretamente')
+      // Preferir biblioteca importada
+      if (this.albedo && typeof this.albedo.publicKey === 'function') {
+        const result = await this.albedo.publicKey({
+          token: 'stellar-stake-house-auth',
+          callback: null
+        })
+
+        if (!result || !result.pubkey) {
+          throw new Error('Resposta inválida do Albedo - chave pública não encontrada')
+        }
+        if (!/^G[A-Z2-7]{55}$/.test(result.pubkey)) {
+          throw new Error('Formato de chave pública Stellar inválido')
+        }
+        return {
+          publicKey: result.pubkey,
+          address: result.pubkey,
+          metadata: {
+            provider: 'albedo',
+            timestamp: Date.now(),
+            intent_version: result.intent_version || 'unknown',
+            signed: result.signed || false,
+            network: 'public'
+          }
+        }
       }
-      
-      // Configurar parâmetros para solicitar chave pública
-      const requestParams = {
-        token: 'stellar-stake-house-auth',
-        callback: null, // Forçar popup mode
-        network: 'public' // Usar rede principal
+
+      // Fallback sem SDK: abrir popup em albedo.link e enviar parâmetros via postMessage
+      const popupUrl = 'https://albedo.link/'
+      console.log('[ALBEDO] SDK indisponível, usando fallback via postMessage:', popupUrl)
+
+      const popup = window.open(popupUrl, 'albedo-intent', 'width=500,height=700')
+      if (!popup) {
+        throw new Error('Popup bloqueado. Permita popups para este site e tente novamente.')
       }
-      
-      console.log('[ALBEDO] Solicitando chave pública com parâmetros:', requestParams)
-      
-      // Solicitar chave pública do usuário
-      const result = await albedo.publicKey(requestParams)
-      
-      console.log('[ALBEDO] Resposta recebida:', {
-        pubkey: result.pubkey ? 'Presente' : 'Ausente',
-        intent_version: result.intent_version,
-        signed: result.signed
+
+      const result = await new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          try { popup.close() } catch {}
+          reject(new Error('Tempo limite excedido. Tente novamente.'))
+        }, 60000)
+
+        // Enviar intent repetidamente até o popup responder (simples handshake)
+        const intentPayload = {
+          intent: 'public_key',
+          token: 'stellar-stake-house-auth',
+          callback: 'postMessage'
+        }
+        const sendInterval = setInterval(() => {
+          try {
+            popup.postMessage(intentPayload, 'https://albedo.link')
+          } catch (_) {
+            // Ignorar erros de envio enquanto o popup inicializa
+          }
+        }, 500)
+
+        const handler = (event) => {
+          try {
+            if (!event || !event.origin || !event.data) return
+            // Validar origem do Albedo
+            if (!event.origin.includes('albedo.link')) return
+
+            const data = event.data
+            // Espera-se um objeto com pubkey/lib intent
+            if (data && data.pubkey) {
+              clearTimeout(timeout)
+              clearInterval(sendInterval)
+              window.removeEventListener('message', handler)
+              try { popup.close() } catch {}
+              resolve({
+                pubkey: data.pubkey,
+                intent_version: data.intent_version || 'unknown',
+                signed: data.signed || false
+              })
+            }
+          } catch (e) {
+            // Ignorar erros do handler
+          }
+        }
+        window.addEventListener('message', handler)
       })
 
       if (!result || !result.pubkey) {
         throw new Error('Resposta inválida do Albedo - chave pública não encontrada')
       }
-
-      // Validar formato da chave pública Stellar
       if (!/^G[A-Z2-7]{55}$/.test(result.pubkey)) {
         throw new Error('Formato de chave pública Stellar inválido')
       }
-
-      console.log('[ALBEDO] Autenticação bem-sucedida')
-      
       return {
         publicKey: result.pubkey,
         address: result.pubkey,
@@ -201,9 +250,9 @@ export class AlbedoStrategy extends AuthStrategy {
     try {
       console.log('[ALBEDO] Assinando transação...')
       
-      const albedo = await this.loadAlbedoSDK()
+      const albedoLib = this.albedo || (await this.loadAlbedoSDK())
       
-      const result = await albedo.tx({
+      const result = await albedoLib.tx({
         xdr: transaction,
         network: options.network || 'public',
         token: 'stellar-stake-house',
@@ -236,9 +285,9 @@ export class AlbedoStrategy extends AuthStrategy {
     try {
       console.log('[ALBEDO] Solicitando pagamento...')
       
-      const albedo = await this.loadAlbedoSDK()
+      const albedoLib = this.albedo || (await this.loadAlbedoSDK())
       
-      const result = await albedo.pay({
+      const result = await albedoLib.pay({
         ...paymentOptions,
         token: 'stellar-stake-house',
         callback: undefined

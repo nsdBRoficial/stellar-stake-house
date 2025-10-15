@@ -47,22 +47,22 @@ stellar contract build
 
 echo "📦 Fazendo deploy do contrato pool_rewards..."
 # Deploy do contrato
-CONTRAT_ID=$(stellar contract deploy \
+CONTRACT_ID=$(stellar contract deploy \
   --wasm target/wasm32-unknown-unknown/release/pool_rewards.wasm \
   --source deployer \
   --network testnet)
 
 echo "✅ Contrato pool_rewards deployado com sucesso!"
-echo "📋 Contract ID: $CONTRAT_ID"
+echo "📋 Contract ID: $CONTRACT_ID"
 
 # Salvar o contract ID em um arquivo
-echo "$CONTRAT_ID" > ../contract_id.txt
+echo "$CONTRACT_ID" > ../contract_id.txt
 echo "💾 Contract ID salvo em contract_id.txt"
 
 # Inicializar o contrato
 echo "🔧 Inicializando contrato..."
 stellar contract invoke \
-  --id $CONTRAT_ID \
+  --id $CONTRACT_ID \
   --source deployer \
   --network testnet \
   -- \
@@ -74,17 +74,21 @@ echo "✅ Contrato inicializado com sucesso!"
 # Criar um exemplo de pool para teste
 echo "🎯 Criando pool de exemplo para teste..."
 
-# Endereço de token fictício para teste (KALE)
-TOKEN_ADDRESS="CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQAHHAGCN4YU"
+# Endereços de tokens de teste (ajuste conforme seus contratos de token)
+# Token de stake (ex: KALE)
+STAKE_TOKEN_ADDRESS="CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQAHHAGCN4YU"
+# Token de recompensa (ex: USDC/USDT)
+REWARD_TOKEN_ADDRESS="CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQAHHAGCN4YU"
 
 POOL_ID=$(stellar contract invoke \
-  --id $CONTRAT_ID \
+  --id $CONTRACT_ID \
   --source deployer \
   --network testnet \
   -- \
   create_pool \
   --owner $DEPLOYER_ADDRESS \
-  --token_address $TOKEN_ADDRESS \
+  --stake_token $STAKE_TOKEN_ADDRESS \
+  --reward_token $REWARD_TOKEN_ADDRESS \
   --total_rewards 1000000000000 \
   --max_apy 1500 \
   --distribution_days 30)
@@ -95,7 +99,7 @@ echo "✅ Pool de exemplo criada com ID: $POOL_ID"
 cat > ../deployment_info.json << EOF
 {
   "network": "testnet",
-  "contract_id": "$CONTRAT_ID",
+  "contract_id": "$CONTRACT_ID",
   "deployer_address": "$DEPLOYER_ADDRESS",
   "example_pool_id": $POOL_ID,
   "deployed_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
@@ -110,13 +114,13 @@ echo ""
 echo "🎉 Deploy concluído com sucesso!"
 echo ""
 echo "📋 Resumo:"
-echo "   Contract ID: $CONTRAT_ID"
+echo "   Contract ID: $CONTRACT_ID"
 echo "   Deployer: $DEPLOYER_ADDRESS"
 echo "   Pool de exemplo: $POOL_ID"
 echo "   Rede: Stellar Testnet"
 echo ""
 echo "🔗 Para interagir com o contrato:"
-echo "   stellar contract invoke --id $CONTRAT_ID --source deployer --network testnet -- <function_name> <args>"
+echo "   stellar contract invoke --id $CONTRACT_ID --source deployer --network testnet -- <function_name> <args>"
 echo ""
 echo "📚 Funções disponíveis:"
 echo "   - create_pool: Criar nova pool de recompensas"
@@ -126,4 +130,4 @@ echo "   - get_pool: Obter informações de uma pool"
 echo "   - get_active_pools: Listar pools ativas"
 echo "   - calculate_pending_rewards: Calcular recompensas pendentes"
 echo ""
-echo "🧪 Para testar na aplicação, use o Contract ID: $CONTRAT_ID"
+echo "🧪 Para testar na aplicação, use o Contract ID: $CONTRACT_ID"
